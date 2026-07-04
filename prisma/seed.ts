@@ -8,9 +8,10 @@
  * so you won't get duplicates.
  */
 
-import { PrismaClient } from "@prisma/client";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 
-const prisma = new PrismaClient();
+import { prisma } from "../lib/db/prisma";
 
 async function main() {
   console.log("🌱 Seeding database…");
