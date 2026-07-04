@@ -1,0 +1,96 @@
+// This is your Prisma schema file.
+// Prisma 7 — connection URL is configured in prisma.config.ts, not here.
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  engineType      = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Projects / Case Studies ─────────────────────────────────────────────────
+model Project {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  client     String
+  problem    String   @db.Text
+  solution   String   @db.Text
+  result     String
+  tags       String[]
+  coverImage String
+  year       Int
+  order      Int      @default(0)
+  published  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ── Services ────────────────────────────────────────────────────────────────
+model Service {
+  id          String @id @default(cuid())
+  title       String
+  description String @db.Text
+  icon        String
+  order       Int    @default(0)
+}
+
+// ── Testimonials ────────────────────────────────────────────────────────────
+model Testimonial {
+  id          String  @id @default(cuid())
+  quote       String  @db.Text
+  author      String
+  role        String
+  company     String
+  projectSlug String?
+  published   Boolean @default(true)
+  order       Int     @default(0)
+}
+
+// ── Homepage Stats ──────────────────────────────────────────────────────────
+model Stat {
+  id    String @id @default(cuid())
+  value String
+  label String
+  order Int    @default(0)
+}
+
+// ── Process Steps ───────────────────────────────────────────────────────────
+model ProcessStep {
+  id          String @id @default(cuid())
+  num         String
+  title       String
+  description String
+  order       Int    @default(0)
+}
+
+// ── Blog Posts ──────────────────────────────────────────────────────────────
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String    @db.Text
+  category    String
+  readTime    Int       @default(5)
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  coverImage  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ── Contact Form Submissions ────────────────────────────────────────────────
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  projectType String?
+  budget      String?
+  message     String   @db.Text
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}

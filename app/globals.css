@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   TAILWIND v4 THEME — mirrors lib/tokens.ts
+   All values here are the canonical design tokens.
+   ───────────────────────────────────────────── */
+
+@theme inline {
+  /* ── Fonts (injected by next/font as CSS vars) ── */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  /* ── Colors ── */
+  --color-background:     #FAFAF8;
+  --color-foreground-dark: #0A0A0A;
+
+  /* Accent — Lime */
+  --color-accent:         #C8FF00;
+  --color-accent-muted:   #C8FF0033;
+
+  /* Muted text — light context */
+  --color-muted-light:    #6B6B6B;
+  --color-muted-lighter:  #A0A0A0;
+
+  /* Muted text — dark context */
+  --color-muted-dark:     #A8A8A0;
+  --color-muted-darker:   #5C5C58;
+
+  /* Surface tones */
+  --color-surface-light:  #F0F0EC;
+  --color-surface-dark:   #141414;
+
+  /* Borders */
+  --color-border-light:   #E4E4E0;
+  --color-border-dark:    #2A2A2A;
+
+  /* ── Spacing extensions (agency-style section padding) ── */
+  /* Tailwind v4 uses rem-based spacing natively; these extend the scale */
+  --spacing-128: 32rem;   /* 512px — full-bleed hero breathing room */
+  --spacing-section-sm: 8rem;    /* 128px — inner section padding        */
+  --spacing-section-md: 10rem;   /* 160px — hero / feature sections      */
+  --spacing-section-lg: 12rem;   /* 192px — statement / full-bleed       */
+}
+
+/* ─────────────────────────────────────────────
+   BASE RESET — intentionally minimal.
+   Page-level styling applied in next pass.
+   ───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+/* Body intentionally unstyled — set in next design pass */
+
+/* ─────────────────────────────────────────────
+   CUSTOM KEYFRAMES
+   Declared here (outside @theme) and referenced via
+   Tailwind v4 arbitrary animation classes or CSS directly.
+   ───────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Utility classes that consume the keyframes */
+@layer utilities {
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+  }
+  .animate-marquee-paused {
+    animation-play-state: paused;
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out both;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out both;
+  }
+}
