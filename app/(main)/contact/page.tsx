@@ -44,10 +44,10 @@ export default function ContactPage() {
                   Email us
                 </p>
                 <a
-                  href="mailto:hello@functional.studio"
+                  href="mailto:Functional@functionalloop.in"
                   className="font-display font-bold text-white text-lg md:text-xl hover:text-accent transition-colors duration-200"
                 >
-                  hello@functional.studio
+                  Functional@functionalloop.in
                 </a>
               </div>
 
@@ -56,10 +56,12 @@ export default function ContactPage() {
                   Call us
                 </p>
                 <a
-                  href="tel:+447700000000"
+                  href="https://wa.me/919272472780"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-display font-bold text-white text-lg md:text-xl hover:text-accent transition-colors duration-200"
                 >
-                  +44 (0) 7700 000 000
+                  +91 92724 72780
                 </a>
               </div>
 

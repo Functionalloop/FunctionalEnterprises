@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/ui/NavBar";
-import Footer from "@/components/ui/Footer";
 
 /**
  * Display / headline font
@@ -60,9 +58,7 @@ export default function RootLayout({
       className={`${displayFont.variable} ${bodyFont.variable} h-full`}
     >
       <body className="min-h-full bg-background font-body antialiased">
-        <NavBar />
         {children}
-        <Footer />
       </body>
     </html>
   );

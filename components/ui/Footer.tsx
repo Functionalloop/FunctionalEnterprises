@@ -5,19 +5,19 @@ import { cn } from "@/lib/utils";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: "Home",     href: "/" },
-  { label: "About",    href: "/about" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
-  { label: "Work",     href: "/work" },
-  { label: "Blog",     href: "/blog" },
-  { label: "Contact",  href: "/contact" },
+  { label: "Work", href: "/work" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn",  href: "https://linkedin.com", external: true },
+  { label: "LinkedIn", href: "https://linkedin.com", external: true },
   { label: "X / Twitter", href: "https://x.com", external: true },
-  { label: "Dribbble",  href: "https://dribbble.com", external: true },
-  { label: "GitHub",    href: "https://github.com", external: true },
+  { label: "Dribbble", href: "https://dribbble.com", external: true },
+  { label: "GitHub", href: "https://github.com", external: true },
 ] as const;
 
 // ── Inline divider ────────────────────────────────────────────────────────────
@@ -117,16 +117,18 @@ export default function Footer() {
                 Get in touch
               </p>
               <a
-                href="mailto:hello@functional.studio"
+                href="mailto:Functional@functionalloop.in"
                 className="block font-body text-sm text-muted-dark hover:text-accent transition-colors duration-200"
               >
-                hello@functional.studio
+                Functional@functionalloop.in
               </a>
               <a
-                href="tel:+447700000000"
+                href="https://wa.me/919272472780"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="block font-body text-sm text-muted-dark hover:text-accent transition-colors duration-200"
               >
-                +44 (0) 7700 000 000
+                +91 92724 72780
               </a>
             </div>
           </div>

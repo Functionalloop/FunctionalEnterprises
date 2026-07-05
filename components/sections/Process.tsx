@@ -4,31 +4,15 @@ import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Heading from "@/components/ui/Heading";
 import Button from "@/components/ui/Button";
+import type { ProcessStep } from "@/lib/db/content";
 
-const steps = [
-  {
-    num: "01",
-    title: "Discover",
-    description: "We learn your business, goals, and users.",
-  },
-  {
-    num: "02",
-    title: "Design",
-    description: "We map structure, flow, and visual direction.",
-  },
-  {
-    num: "03",
-    title: "Build",
-    description: "We ship clean, fast, production-ready code.",
-  },
-  {
-    num: "04",
-    title: "Launch",
-    description: "We deploy, test, and stay on for support.",
-  },
-];
+interface Props {
+  steps: ProcessStep[];
+}
 
-export default function Process() {
+export default function Process({ steps }: Props) {
+  if (steps.length === 0) return null;
+
   return (
     <SectionWrapper theme="light" id="process">
       {/* Header */}
@@ -51,7 +35,7 @@ export default function Process() {
 
         {steps.map((step, index) => (
           <motion.div
-            key={step.num}
+            key={step.id}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}

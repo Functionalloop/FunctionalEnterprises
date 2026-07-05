@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
-import { testimonials } from "@/lib/data/testimonials";
+import type { Testimonial } from "@/lib/db/testimonials";
+
+interface Props {
+  testimonials: Testimonial[];
+}
 
 const LOGO_NAMES = [
   "Meridian Financial",
@@ -18,18 +22,26 @@ const LOGO_NAMES = [
 
 const AUTO_ROTATE_MS = 5000;
 
-export default function SocialProof() {
+export default function SocialProof({ testimonials }: Props) {
   const [active, setActive] = useState(0);
+
+  // Reset active index if testimonials change (e.g. after admin update)
+  useEffect(() => {
+    setActive(0);
+  }, [testimonials.length]);
 
   // Auto-rotate testimonials
   useEffect(() => {
+    if (testimonials.length <= 1) return;
     const timer = setInterval(() => {
       setActive((prev) => (prev + 1) % testimonials.length);
     }, AUTO_ROTATE_MS);
     return () => clearInterval(timer);
-  }, []);
+  }, [testimonials.length]);
 
-  const t = testimonials[active];
+  if (testimonials.length === 0) return null;
+
+  const t = testimonials[active] ?? testimonials[0];
 
   return (
     <SectionWrapper
@@ -66,7 +78,8 @@ export default function SocialProof() {
                 className="text-center"
               >
                 <blockquote>
-                  <p className="font-display font-bold leading-[1.12] tracking-tight text-white mb-10"
+                  <p
+                    className="font-display font-bold leading-[1.12] tracking-tight text-white mb-10"
                     style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)" }}
                   >
                     {t.quote}
@@ -85,30 +98,42 @@ export default function SocialProof() {
           </div>
 
           {/* Dot navigation */}
-          <div className="flex items-center gap-3 mt-10" role="tablist" aria-label="Testimonials">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                role="tab"
-                aria-selected={i === active}
-                aria-label={`Testimonial ${i + 1}`}
-                onClick={() => setActive(i)}
-                className="relative w-2 h-2 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-foreground-dark"
-              >
-                <span className={`block w-full h-full rounded-full transition-all duration-300 ${i === active ? "bg-accent scale-125" : "bg-muted-darker hover:bg-muted-dark"}`} />
-              </button>
-            ))}
-          </div>
+          {testimonials.length > 1 && (
+            <div className="flex items-center gap-3 mt-10" role="tablist" aria-label="Testimonials">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  role="tab"
+                  aria-selected={i === active}
+                  aria-label={`Testimonial ${i + 1}`}
+                  onClick={() => setActive(i)}
+                  className="relative w-2 h-2 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-foreground-dark"
+                >
+                  <span
+                    className={`block w-full h-full rounded-full transition-all duration-300 ${
+                      i === active
+                        ? "bg-accent scale-125"
+                        : "bg-muted-darker hover:bg-muted-dark"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── Logo marquee strip ─────────────────────────────────────────────── */}
       <div className="border-t border-border-dark pt-12 md:pt-16 pb-14 md:pb-20 relative overflow-hidden">
         {/* Edge fade masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 md:w-48 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to right, #0A0A0A, transparent)" }} />
-        <div className="absolute right-0 top-0 bottom-0 w-24 md:w-48 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to left, #0A0A0A, transparent)" }} />
+        <div
+          className="absolute left-0 top-0 bottom-0 w-24 md:w-48 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to right, #0A0A0A, transparent)" }}
+        />
+        <div
+          className="absolute right-0 top-0 bottom-0 w-24 md:w-48 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to left, #0A0A0A, transparent)" }}
+        />
 
         <div className="flex group">
           {/* Set 1 */}
@@ -123,7 +148,10 @@ export default function SocialProof() {
             ))}
           </div>
           {/* Set 2 — duplicate for seamless loop */}
-          <div className="flex shrink-0 animate-marquee group-hover:animate-marquee-paused" aria-hidden="true">
+          <div
+            className="flex shrink-0 animate-marquee group-hover:animate-marquee-paused"
+            aria-hidden="true"
+          >
             {LOGO_NAMES.map((name, i) => (
               <div
                 key={`b-${i}`}

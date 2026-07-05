@@ -3,22 +3,22 @@
 /**
  * Services — three-up card grid
  *
- * Layout: light background (contrast after dark hero), section eyebrow,
- * large heading, then a 3-column card grid. Each card reveals on scroll
- * with a staggered fade+slide-up using whileInView (viewport-triggered,
- * not scrubbed — this section lives below the hero's scrub zone).
- *
- * Cards use the gap-px / bg-border-light technique to render crisp 1px
- * dividers between columns without pseudo-elements or box-shadows.
+ * Receives `services` from the parent server component (app/page.tsx or
+ * app/services/page.tsx) so data comes from the database, not static files.
+ * Framer Motion animations remain client-side.
  */
 
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { services, type Service } from "@/lib/data/services";
+import type { Service } from "@/lib/db/services";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Heading from "@/components/ui/Heading";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+
+interface Props {
+  services: Service[];
+}
 
 // ── Icon map — inline SVGs keyed by service.icon string ──────────────────────
 const ICONS: Record<string, ReactNode> = {
@@ -95,15 +95,8 @@ const headerVariants = {
 };
 
 // ── Service card ─────────────────────────────────────────────────────────────
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: Service;
-  index: number;
-}) {
+function ServiceCard({ service, index }: { service: Service; index: number }) {
   const num = String(index + 1).padStart(2, "0");
-
   return (
     <motion.article
       custom={index}
@@ -113,16 +106,14 @@ function ServiceCard({
       viewport={{ once: true, margin: "-80px" }}
       className={cn(
         "group relative bg-background flex flex-col gap-8 p-8 lg:p-12",
-        "border-t-2 border-t-transparent", // placeholder — overridden by hover
+        "border-t-2 border-t-transparent",
         "transition-colors duration-300",
-        // Lime top accent appears on hover
         "hover:border-t-accent"
       )}
       aria-label={service.title}
     >
       {/* Number + icon row */}
       <div className="flex items-start justify-between">
-        {/* Decorative index number — agency editorial touch */}
         <span
           className="font-display font-extrabold text-muted-lighter leading-none select-none"
           style={{ fontSize: "clamp(3rem, 5vw, 5rem)" }}
@@ -130,8 +121,6 @@ function ServiceCard({
         >
           {num}
         </span>
-
-        {/* Icon — lime-tinted on hover */}
         <span
           className={cn(
             "flex items-center justify-center w-11 h-11 mt-2",
@@ -173,7 +162,9 @@ function ServiceCard({
 }
 
 // ── Section ───────────────────────────────────────────────────────────────────
-export default function Services() {
+export default function Services({ services }: Props) {
+  if (services.length === 0) return null;
+
   return (
     <SectionWrapper theme="light" id="services" aria-label="Our services">
       {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -185,19 +176,13 @@ export default function Services() {
         className="mb-16 md:mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
       >
         <div>
-          {/* Eyebrow */}
           <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-4">
             What we do
           </p>
-
-          {/* Section headline */}
           <Heading level="h2" size="h2" className="text-foreground-dark">
-            Built for{" "}
-            <span className="text-accent">results.</span>
+            Built for <span className="text-accent">results.</span>
           </Heading>
         </div>
-
-        {/* Deck copy — right-aligned on desktop */}
         <p className="font-body text-sm text-muted-light leading-relaxed max-w-sm md:text-right">
           Three disciplines, one integrated team. We embed strategy into every
           deliverable so your investment compounds over time.
@@ -205,14 +190,9 @@ export default function Services() {
       </motion.div>
 
       {/* ── Card grid ──────────────────────────────────────────────────── */}
-      {/*
-        gap-px + bg-border-light: the container becomes the "gap colour."
-        Each card has bg-background, so the 1px gaps between them render as
-        the container's border-light colour. Clean dividers, zero box-shadow.
-      */}
       <div className="grid md:grid-cols-3 gap-px bg-border-light border border-border-light">
         {services.map((service, i) => (
-          <ServiceCard key={service.title} service={service} index={i} />
+          <ServiceCard key={service.id} service={service} index={i} />
         ))}
       </div>
 

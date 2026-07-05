@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { services } from "@/lib/data/services";
+import { getServices } from "@/lib/db/services";
 import Button from "@/components/ui/Button";
 
 export const metadata: Metadata = {
@@ -8,24 +8,7 @@ export const metadata: Metadata = {
     "Functional Enterprises offers web design & development, brand identity, and digital growth services for ambitious brands.",
 };
 
-const faqs = [
-  {
-    q: "What is your typical project timeline?",
-    a: "Most projects take 4–10 weeks from kick-off to launch. Simple marketing sites run 4–6 weeks; complex products with custom functionality typically run 8–12 weeks. We agree timelines up front in the proposal.",
-  },
-  {
-    q: "Do you work with startups or only established businesses?",
-    a: "Both. We've taken products from zero-to-launch and we've overhauled established brands. What matters is that you have a clear goal and are ready to invest in doing it properly.",
-  },
-  {
-    q: "What does the engagement look like day-to-day?",
-    a: "You'll have a dedicated point of contact throughout. We work in weekly sprints with async updates and a weekly check-in call. You see work early and often — no big-reveal surprises.",
-  },
-  {
-    q: "Do you offer ongoing support after launch?",
-    a: "Yes. We offer monthly retainers covering maintenance, performance monitoring, and iterative improvements. Many clients stay with us for years after initial build.",
-  },
-];
+export const dynamic = "force-dynamic";
 
 const ICONS: Record<string, React.ReactNode> = {
   monitor: (
@@ -50,7 +33,28 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-export default function ServicesPage() {
+const faqs = [
+  {
+    q: "What is your typical project timeline?",
+    a: "Most projects take 4–10 weeks from kick-off to launch. Simple marketing sites run 4–6 weeks; complex products with custom functionality typically run 8–12 weeks. We agree timelines up front in the proposal.",
+  },
+  {
+    q: "Do you work with startups or only established businesses?",
+    a: "Both. We've taken products from zero-to-launch and we've overhauled established brands. What matters is that you have a clear goal and are ready to invest in doing it properly.",
+  },
+  {
+    q: "What does the engagement look like day-to-day?",
+    a: "You'll have a dedicated point of contact throughout. We work in weekly sprints with async updates and a weekly check-in call. You see work early and often — no big-reveal surprises.",
+  },
+  {
+    q: "Do you offer ongoing support after launch?",
+    a: "Yes. We offer monthly retainers covering maintenance, performance monitoring, and iterative improvements. Many clients stay with us for years after initial build.",
+  },
+];
+
+export default async function ServicesPage() {
+  const services = await getServices();
+
   return (
     <main className="bg-background min-h-screen">
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
@@ -75,33 +79,39 @@ export default function ServicesPage() {
       {/* ── Services grid ─────────────────────────────────────────────────── */}
       <section className="py-20 md:py-28">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
-          <div className="flex flex-col gap-0 border border-border-light">
-            {services.map((service, i) => (
-              <div
-                key={service.title}
-                className={`group flex flex-col md:flex-row gap-8 md:gap-16 p-10 md:p-14 border-t-2 border-t-transparent hover:border-t-accent transition-colors duration-300 ${i !== 0 ? "border-t border-border-light" : ""}`}
-              >
-                {/* Number + icon */}
-                <div className="flex md:flex-col items-start gap-6 md:gap-4 md:w-24 shrink-0">
-                  <span className="font-display font-extrabold text-5xl md:text-6xl text-muted-lighter leading-none select-none">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-muted-light group-hover:text-accent transition-colors duration-300">
-                    {ICONS[service.icon]}
-                  </span>
+          {services.length === 0 ? (
+            <p className="font-body text-muted-light text-sm text-center py-20">
+              Services coming soon.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-0 border border-border-light">
+              {services.map((service, i) => (
+                <div
+                  key={service.id}
+                  className={`group flex flex-col md:flex-row gap-8 md:gap-16 p-10 md:p-14 border-t-2 border-t-transparent hover:border-t-accent transition-colors duration-300 ${i !== 0 ? "border-t border-border-light" : ""}`}
+                >
+                  {/* Number + icon */}
+                  <div className="flex md:flex-col items-start gap-6 md:gap-4 md:w-24 shrink-0">
+                    <span className="font-display font-extrabold text-5xl md:text-6xl text-muted-lighter leading-none select-none">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-muted-light group-hover:text-accent transition-colors duration-300">
+                      {ICONS[service.icon]}
+                    </span>
+                  </div>
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-foreground-dark mb-5 group-hover:text-accent transition-colors duration-300">
+                      {service.title}
+                    </h2>
+                    <p className="font-body text-sm md:text-base text-muted-light leading-relaxed max-w-2xl">
+                      {service.description}
+                    </p>
+                  </div>
                 </div>
-                {/* Content */}
-                <div className="flex-1">
-                  <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-foreground-dark mb-5 group-hover:text-accent transition-colors duration-300">
-                    {service.title}
-                  </h2>
-                  <p className="font-body text-sm md:text-base text-muted-light leading-relaxed max-w-2xl">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

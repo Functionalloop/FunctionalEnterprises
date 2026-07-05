@@ -6,10 +6,16 @@ import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Heading from "@/components/ui/Heading";
 import Button from "@/components/ui/Button";
-import { projects } from "@/lib/data/projects";
+import type { Project } from "@/lib/db/projects";
 
-export default function FeaturedWork() {
+interface Props {
+  projects: Project[];
+}
+
+export default function FeaturedWork({ projects }: Props) {
   const featuredProjects = projects.slice(0, 4);
+
+  if (featuredProjects.length === 0) return null;
 
   return (
     <SectionWrapper theme="light" id="work">
@@ -38,7 +44,7 @@ export default function FeaturedWork() {
               href={`/work/${project.slug}`}
               className="group relative block h-full flex flex-col bg-background border border-border-light shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg hover:border-border-light"
             >
-              {/* Lime left accent bar — real positioned element, not a pseudo */}
+              {/* Lime left accent bar */}
               <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
               {/* Cover image — 16:9 */}
@@ -67,7 +73,7 @@ export default function FeaturedWork() {
                   </p>
                 </div>
 
-                {/* Result stat — the money line */}
+                {/* Result stat */}
                 <p className="font-body text-sm text-muted-light leading-relaxed border-l-2 border-accent/40 pl-3 mb-5 group-hover:border-accent transition-colors duration-300">
                   {project.result}
                 </p>
@@ -75,7 +81,7 @@ export default function FeaturedWork() {
                 {/* Tags */}
                 <div className="mt-auto">
                   <p className="font-body text-[11px] text-muted-lighter uppercase tracking-widest">
-                    {project.tags.join(" · ")}
+                    {project.tags.split(",").map(t => t.trim()).join(" · ")}
                   </p>
                 </div>
               </div>

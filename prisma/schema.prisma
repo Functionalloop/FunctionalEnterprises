@@ -4,11 +4,12 @@
 
 generator client {
   provider        = "prisma-client-js"
-  engineType      = "library"
+  engineType      = "binary"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // ── Projects / Case Studies ─────────────────────────────────────────────────
@@ -17,10 +18,10 @@ model Project {
   slug       String   @unique
   title      String
   client     String
-  problem    String   @db.Text
-  solution   String   @db.Text
+  problem    String
+  solution   String
   result     String
-  tags       String[]
+  tags       String
   coverImage String
   year       Int
   order      Int      @default(0)
@@ -33,7 +34,7 @@ model Project {
 model Service {
   id          String @id @default(cuid())
   title       String
-  description String @db.Text
+  description String
   icon        String
   order       Int    @default(0)
 }
@@ -41,7 +42,7 @@ model Service {
 // ── Testimonials ────────────────────────────────────────────────────────────
 model Testimonial {
   id          String  @id @default(cuid())
-  quote       String  @db.Text
+  quote       String
   author      String
   role        String
   company     String
@@ -73,7 +74,7 @@ model BlogPost {
   slug        String    @unique
   title       String
   excerpt     String
-  content     String    @db.Text
+  content     String
   category    String
   readTime    Int       @default(5)
   published   Boolean   @default(false)
@@ -90,7 +91,7 @@ model ContactSubmission {
   email       String
   projectType String?
   budget      String?
-  message     String   @db.Text
+  message     String
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
 }

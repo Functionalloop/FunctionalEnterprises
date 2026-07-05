@@ -14,11 +14,11 @@ export async function submitContactForm(
   formData: FormData
 ): Promise<ContactFormState> {
   // Extract form fields
-  const name        = ((formData.get("name")        as string) ?? "").trim();
-  const email       = ((formData.get("email")       as string) ?? "").trim();
+  const name = ((formData.get("name") as string) ?? "").trim();
+  const email = ((formData.get("email") as string) ?? "").trim();
   const projectType = ((formData.get("projectType") as string) ?? "").trim();
-  const budget      = ((formData.get("budget")      as string) ?? "").trim();
-  const message     = ((formData.get("message")     as string) ?? "").trim();
+  const budget = ((formData.get("budget") as string) ?? "").trim();
+  const message = ((formData.get("message") as string) ?? "").trim();
 
   // M-1: IP-based rate limiting — max 3 submissions per hour
   const h = await headers();
@@ -71,7 +71,7 @@ export async function submitContactForm(
       name,
       email,
       projectType: projectType || undefined,
-      budget:      budget || undefined,
+      budget: budget || undefined,
       message,
     });
   } catch (dbErr) {
@@ -80,8 +80,8 @@ export async function submitContactForm(
   }
 
   // --- SEND EMAIL VIA RESEND ---
-  const apiKey    = process.env.RESEND_API_KEY;
-  const recipient = process.env.CONTACT_RECIPIENT ?? "hello@functional.studio";
+  const apiKey = process.env.RESEND_API_KEY;
+  const recipient = process.env.CONTACT_RECIPIENT ?? "Functional@functionalloop.in";
 
   if (apiKey) {
     try {
@@ -92,10 +92,10 @@ export async function submitContactForm(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from:     "Functional Enterprises <onboarding@resend.dev>",
-          to:       [recipient],
+          from: "Functional Enterprises <onboarding@resend.dev>",
+          to: [recipient],
           reply_to: email,
-          subject:  `New enquiry from ${name} — ${projectType || "General"}`,
+          subject: `New enquiry from ${name} — ${projectType || "General"}`,
           text: `
 Name:         ${name}
 Email:        ${email}

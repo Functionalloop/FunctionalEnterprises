@@ -1,192 +1,121 @@
-/**
- * prisma/seed.ts
- *
- * Seeds the database with the existing static site data.
- * Run with: npx prisma db seed
- *
- * This is safe to re-run — it upserts rather than inserts,
- * so you won't get duplicates.
- */
-
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import { prisma } from "../lib/db/prisma";
+const { prisma } = require("../lib/db/prisma");
+import { projects } from "../lib/data/projects";
+import { services } from "../lib/data/services";
+import { testimonials } from "../lib/data/testimonials";
+
+const stats = [
+  { value: "42+", label: "Projects Delivered" },
+  { value: "£4M+", label: "Revenue Driven for Clients" },
+  { value: "98%", label: "Client Retention Rate" },
+  { value: "6 Wks", label: "Average Launch Timeline" },
+];
+
+const steps = [
+  { num: "01", title: "Discover", description: "We learn your business, goals, and users." },
+  { num: "02", title: "Design", description: "We map structure, flow, and visual direction." },
+  { num: "03", title: "Build", description: "We ship clean, fast, production-ready code." },
+  { num: "04", title: "Launch", description: "We deploy, test, and stay on for support." },
+];
 
 async function main() {
-  console.log("🌱 Seeding database…");
+  console.log("Seeding database...");
 
-  // ── Projects ───────────────────────────────────────────────────────────────
-  const projects = [
-    {
-      slug: "meridian-rebrand",
-      title: "Meridian Digital Rebrand",
-      client: "Meridian Financial",
-      problem:
-        "Meridian's legacy brand and website projected instability — inconsistent visual language, slow performance, and a UX that undermined trust with high-net-worth clients.",
-      solution:
-        "We rebuilt the brand from scratch: new identity system, a performance-first Next.js marketing site with Framer Motion animations, and a structured content architecture that made internal updates effortless.",
-      result: "43% increase in qualified lead volume within 90 days of launch",
-      tags: ["Brand Identity", "Next.js", "Framer Motion"],
-      coverImage: "/images/projects/meridian-cover.jpg",
-      year: 2024,
-      order: 0,
-      published: true,
-    },
-    {
-      slug: "nova-saas-launch",
-      title: "Nova SaaS Launch",
-      client: "Nova Labs",
-      problem:
-        "Nova had strong product-market fit but no marketing presence. Their first launch window was 6 weeks away with zero brand, zero website.",
-      solution:
-        "6-week sprint: brand identity, full marketing site, pricing pages, and an onboarding sequence. We ran in parallel across design and engineering to hit the launch date without compromise.",
-      result: "£180k in first-month ARR; featured on Product Hunt #2 of the day",
-      tags: ["Web Design", "Next.js", "SaaS", "Brand Identity"],
-      coverImage: "/images/projects/nova-cover.jpg",
-      year: 2024,
-      order: 1,
-      published: true,
-    },
-    {
-      slug: "bloom-ecommerce",
-      title: "Bloom E-Commerce Replatform",
-      client: "Bloom Botanicals",
-      problem:
-        "Bloom's Shopify store was converting at 0.9% — below industry average — and felt disconnected from their premium positioning in the luxury skincare space.",
-      solution:
-        "Full e-commerce replatform to a custom Next.js + Shopify Storefront API stack. We rebuilt the product pages, cart experience, and checkout flow around conversion data, with photography direction and full brand refresh.",
-      result: "Conversion rate lifted from 0.9% to 3.4% — a 278% improvement",
-      tags: ["E-Commerce", "Shopify", "Next.js", "CRO"],
-      coverImage: "/images/projects/bloom-cover.jpg",
-      year: 2023,
-      order: 2,
-      published: true,
-    },
-    {
-      slug: "atlas-platform",
-      title: "Atlas Analytics Platform",
-      client: "Atlas Analytics",
-      problem:
-        "Atlas had a functional product and enterprise clients but no consistent design system, leading to a fragmented UX across 12 dashboard modules.",
-      solution:
-        "12-week design system project: full component library in Figma and React, dark/light theme tokens, accessibility audit, and a migration guide for the internal engineering team.",
-      result:
-        "UI build time reduced by 60%; design-to-code handoff time dropped from 3 days to 4 hours",
-      tags: ["Design System", "React", "TypeScript", "Accessibility"],
-      coverImage: "/images/projects/atlas-cover.jpg",
-      year: 2023,
-      order: 3,
-      published: true,
-    },
-  ];
-
-  for (const project of projects) {
+  // Seed Projects
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
     await prisma.project.upsert({
-      where: { slug: project.slug },
-      update: project,
-      create: project,
+      where: { slug: p.slug },
+      update: {},
+      create: {
+        slug: p.slug,
+        title: p.title,
+        client: p.client,
+        problem: p.problem,
+        solution: p.solution,
+        result: p.result,
+        tags: p.tags.join(", "),
+        coverImage: p.coverImage,
+        year: p.year,
+        order: i,
+        published: true,
+      },
     });
   }
-  console.log(`  ✓ ${projects.length} projects`);
+  console.log("Projects seeded.");
 
-  // ── Services ───────────────────────────────────────────────────────────────
-  const services = [
-    {
-      title: "Web Design & Development",
-      description:
-        "From brand-led landing pages to complex web applications — we design and build performant, accessible digital products using Next.js, React, and modern CSS.",
-      icon: "monitor",
-      order: 0,
-    },
-    {
-      title: "Brand Identity & Strategy",
-      description:
-        "We craft visual identities that hold up at every touchpoint. Strategy, naming, logo systems, typography, colour, and full brand guidelines delivered.",
-      icon: "layers",
-      order: 1,
-    },
-    {
-      title: "Digital Growth & Conversion",
-      description:
-        "Performance-focused work: CRO audits, A/B testing frameworks, SEO architecture, and analytics instrumentation to turn traffic into pipeline.",
-      icon: "trending-up",
-      order: 2,
-    },
-  ];
+  // Seed Services
+  for (let i = 0; i < services.length; i++) {
+    const s = services[i];
+    // Since service doesn't have a slug, we use a simple check
+    const existing = await prisma.service.findFirst({ where: { title: s.title } });
+    if (!existing) {
+      await prisma.service.create({
+        data: {
+          title: s.title,
+          description: s.description,
+          icon: s.icon,
+          order: i,
+        },
+      });
+    }
+  }
+  console.log("Services seeded.");
 
-  await prisma.service.deleteMany();
-  await prisma.service.createMany({ data: services });
-  console.log(`  ✓ ${services.length} services`);
+  // Seed Testimonials
+  for (let i = 0; i < testimonials.length; i++) {
+    const t = testimonials[i];
+    const existing = await prisma.testimonial.findFirst({ where: { author: t.author } });
+    if (!existing) {
+      await prisma.testimonial.create({
+        data: {
+          quote: t.quote,
+          author: t.author,
+          role: t.role,
+          company: t.company,
+          projectSlug: t.projectSlug || null,
+          order: i,
+          published: true,
+        },
+      });
+    }
+  }
+  console.log("Testimonials seeded.");
 
-  // ── Testimonials ───────────────────────────────────────────────────────────
-  const testimonials = [
-    {
-      quote:
-        "Functional didn't just build us a website — they rebuilt how we present to the world. The results spoke for themselves within the first month.",
-      author: "James Holt",
-      role: "CEO",
-      company: "Meridian Financial",
-      projectSlug: "meridian-rebrand",
-      published: true,
-      order: 0,
-    },
-    {
-      quote:
-        "Six weeks from blank canvas to live product. I've never worked with a team that moves this fast without sacrificing quality.",
-      author: "Sarah Chen",
-      role: "Founder",
-      company: "Nova Labs",
-      projectSlug: "nova-saas-launch",
-      published: true,
-      order: 1,
-    },
-    {
-      quote:
-        "The conversion rate jump was almost embarrassing — we should have done this two years ago. Worth every penny.",
-      author: "Priya Okafor",
-      role: "Head of Growth",
-      company: "Bloom Botanicals",
-      projectSlug: "bloom-ecommerce",
-      published: true,
-      order: 2,
-    },
-  ];
+  // Seed Stats
+  for (let i = 0; i < stats.length; i++) {
+    const s = stats[i];
+    const existing = await prisma.stat.findFirst({ where: { label: s.label } });
+    if (!existing) {
+      await prisma.stat.create({
+        data: { value: s.value, label: s.label, order: i },
+      });
+    }
+  }
+  console.log("Stats seeded.");
 
-  await prisma.testimonial.deleteMany();
-  await prisma.testimonial.createMany({ data: testimonials });
-  console.log(`  ✓ ${testimonials.length} testimonials`);
+  // Seed Process Steps
+  for (let i = 0; i < steps.length; i++) {
+    const s = steps[i];
+    const existing = await prisma.processStep.findFirst({ where: { title: s.title } });
+    if (!existing) {
+      await prisma.processStep.create({
+        data: { num: s.num, title: s.title, description: s.description, order: i },
+      });
+    }
+  }
+  console.log("Process Steps seeded.");
 
-  // ── Stats ──────────────────────────────────────────────────────────────────
-  const stats = [
-    { value: "42+", label: "Projects Delivered", order: 0 },
-    { value: "£4M+", label: "Revenue Driven for Clients", order: 1 },
-    { value: "98%", label: "Client Retention Rate", order: 2 },
-    { value: "6 Wks", label: "Average Launch Timeline", order: 3 },
-  ];
-
-  await prisma.stat.deleteMany();
-  await prisma.stat.createMany({ data: stats });
-  console.log(`  ✓ ${stats.length} stats`);
-
-  // ── Process steps ──────────────────────────────────────────────────────────
-  const processSteps = [
-    { num: "01", title: "Discover", description: "We learn your business, goals, and users.", order: 0 },
-    { num: "02", title: "Design", description: "We map structure, flow, and visual direction.", order: 1 },
-    { num: "03", title: "Build", description: "We ship clean, fast, production-ready code.", order: 2 },
-    { num: "04", title: "Launch", description: "We deploy, test, and stay on for support.", order: 3 },
-  ];
-
-  await prisma.processStep.deleteMany();
-  await prisma.processStep.createMany({ data: processSteps });
-  console.log(`  ✓ ${processSteps.length} process steps`);
-
-  console.log("✅ Seed complete.");
+  console.log("Seeding complete!");
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seed failed:", e);
+    console.error(e);
     process.exit(1);
   })
-  .finally(() => prisma.$disconnect());
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

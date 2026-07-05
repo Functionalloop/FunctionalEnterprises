@@ -2,20 +2,30 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { projects } from "@/lib/data/projects";
+import { getProject, getProjects } from "@/lib/db/projects";
 import Button from "@/components/ui/Button";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+  // Best-effort: pre-generate paths at build time.
+  // If the DB is unreachable during build, return [] and let
+  // dynamic rendering handle all paths at request time.
+  try {
+    const projects = await getProjects(true);
+    return projects.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
+  const project = await getProject(slug);
   if (!project) return {};
   return {
     title: project.title,
@@ -25,10 +35,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
-  if (!project) notFound();
 
-  const otherProjects = projects.filter((p) => p.slug !== slug).slice(0, 2);
+  // Fetch the requested project + all others in parallel
+  const [project, allProjects] = await Promise.all([
+    getProject(slug),
+    getProjects(true),
+  ]);
+
+  if (!project || !project.published) notFound();
+
+  const otherProjects = allProjects
+    .filter((p) => p.slug !== slug)
+    .slice(0, 2);
 
   return (
     <main className="bg-background">
@@ -37,7 +55,9 @@ export default async function CaseStudyPage({ params }: Props) {
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20 pb-16 md:pb-20">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-10 font-body text-xs text-muted-darker tracking-wide">
-            <Link href="/work" className="hover:text-muted-dark transition-colors">Work</Link>
+            <Link href="/work" className="hover:text-muted-dark transition-colors">
+              Work
+            </Link>
             <span aria-hidden="true">→</span>
             <span className="text-muted-dark">{project.title}</span>
           </div>
@@ -53,12 +73,12 @@ export default async function CaseStudyPage({ params }: Props) {
           </h1>
 
           <div className="flex flex-wrap gap-2 mb-12">
-            {project.tags.map((tag) => (
+            {project.tags.split(",").map((tag) => (
               <span
-                key={tag}
+                key={tag.trim()}
                 className="font-body text-[10px] tracking-widest uppercase text-muted-dark border border-border-dark px-3 py-1.5"
               >
-                {tag}
+                {tag.trim()}
               </span>
             ))}
           </div>
@@ -121,10 +141,10 @@ export default async function CaseStudyPage({ params }: Props) {
                   Services Used
                 </p>
                 <ul className="flex flex-col gap-3">
-                  {project.tags.map((tag) => (
-                    <li key={tag} className="flex items-center gap-3 font-body text-sm text-muted-light">
+                  {project.tags.split(",").map((tag) => (
+                    <li key={tag.trim()} className="flex items-center gap-3 font-body text-sm text-muted-light">
                       <span className="w-1.5 h-1.5 bg-accent rounded-full shrink-0" />
-                      {tag}
+                      {tag.trim()}
                     </li>
                   ))}
                 </ul>

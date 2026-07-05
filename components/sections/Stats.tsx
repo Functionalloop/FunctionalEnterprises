@@ -2,21 +2,21 @@
 
 import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
+import type { Stat } from "@/lib/db/content";
 
-const stats = [
-  { value: "42+", label: "Projects Delivered" },
-  { value: "£4M+", label: "Revenue Driven for Clients" },
-  { value: "98%", label: "Client Retention Rate" },
-  { value: "6 Wks", label: "Average Launch Timeline" },
-];
+interface Props {
+  stats: Stat[];
+}
 
-export default function Stats() {
+export default function Stats({ stats }: Props) {
+  if (stats.length === 0) return null;
+
   return (
     <SectionWrapper theme="dark" id="stats">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border-dark border border-border-dark">
         {stats.map((stat, index) => (
           <motion.div
-            key={stat.label}
+            key={stat.id}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
