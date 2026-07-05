@@ -121,9 +121,8 @@ export default function Pricing() {
               {tier.prefix && (
                 <p className="font-body text-xs text-muted-dark mb-2 font-medium">{tier.prefix}</p>
               )}
-              <div className="flex items-start justify-center gap-1 text-foreground-dark">
-                <span className="font-display text-2xl font-semibold leading-tight mt-1">₹</span>
-                <span className="font-display text-4xl font-bold">{tier.price}</span>
+              <div className="flex items-center justify-center text-foreground-dark">
+                <span className="font-display text-2xl font-bold leading-tight">{tier.price}</span>
               </div>
             </div>
 
