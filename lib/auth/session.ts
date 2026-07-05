@@ -3,9 +3,20 @@ import { cookies } from "next/headers";
 const COOKIE_NAME = "admin_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24; // 24 hours
 
+// ── L-4: Validate secret at module load time ──────────────────────────────────
+// Throws loudly during startup if the secret is missing or too short.
 function getSecret(): string {
   const secret = process.env.ADMIN_SESSION_SECRET;
-  if (!secret) throw new Error("ADMIN_SESSION_SECRET is not set in .env.local");
+  if (!secret) {
+    throw new Error(
+      "[Auth] ADMIN_SESSION_SECRET is not set. Add it to .env.local and restart."
+    );
+  }
+  if (secret.length < 32) {
+    throw new Error(
+      "[Auth] ADMIN_SESSION_SECRET must be at least 32 characters. Regenerate with: openssl rand -hex 32"
+    );
+  }
   return secret;
 }
 
@@ -42,6 +53,7 @@ export async function verifyToken(token: string): Promise<boolean> {
       ["verify"]
     );
     const sigBytes = new Uint8Array(sig.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+    // H-5 (in session.ts): crypto.subtle.verify is constant-time
     return crypto.subtle.verify("HMAC", keyMaterial, sigBytes, enc.encode(nonce));
   } catch {
     return false;
@@ -54,11 +66,13 @@ export async function setSession(): Promise<void> {
     .join("");
   const token = await signNonce(nonce);
   const store = await cookies();
+
+  // H-4: secure, strict sameSite, scoped to /admin only
   store.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
+    sameSite: "strict",
+    path: "/admin",
     maxAge: MAX_AGE_SECONDS,
   });
 }
@@ -67,3 +81,5 @@ export async function clearSession(): Promise<void> {
   const store = await cookies();
   store.delete(COOKIE_NAME);
 }
+
+export { COOKIE_NAME, MAX_AGE_SECONDS };

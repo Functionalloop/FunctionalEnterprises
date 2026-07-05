@@ -3,11 +3,14 @@
 import { useActionState } from "react";
 import { login } from "@/app/admin/login/actions";
 
-export default function LoginForm() {
+export default function LoginForm({ from }: { from?: string }) {
   const [state, formAction, isPending] = useActionState(login, undefined);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      {/* M-5: Pass the `from` redirect target through the form as a hidden field */}
+      {from && <input type="hidden" name="from" value={from} />}
+
       <div className="flex flex-col gap-2">
         <label
           htmlFor="password"

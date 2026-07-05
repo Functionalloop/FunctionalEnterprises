@@ -94,3 +94,14 @@ model ContactSubmission {
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
+
+// ── Admin Audit Log ─────────────────────────────────────────────────────────
+// Records every admin create / update / delete action for accountability.
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // "create" | "update" | "delete"
+  entity    String   // model name e.g. "Project" | "Service" | "BlogPost"
+  entityId  String   // record id or slug
+  detail    String?  // optional human-readable summary (e.g. record title)
+  createdAt DateTime @default(now())
+}

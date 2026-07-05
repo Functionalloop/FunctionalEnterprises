@@ -1,0 +1,7 @@
+# I-2: Disallow search engine crawling of admin panel
+User-agent: *
+Disallow: /admin
+Disallow: /admin/
+
+# Allow everything else
+Allow: /

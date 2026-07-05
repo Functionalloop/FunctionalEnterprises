@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
   title: "Admin Login — Functional Enterprises",
   robots: { index: false, follow: false },
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string; error?: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
+  const { from } = await searchParams;
+
   return (
     <main className="min-h-screen bg-foreground-dark flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
@@ -28,12 +31,9 @@ export default function LoginPage({
           Enter your admin password to continue.
         </p>
 
-        <LoginForm />
+        {/* M-5: Pass sanitised `from` to the form so the action can redirect back */}
+        <LoginForm from={from?.startsWith("/admin") ? from : undefined} />
       </div>
     </main>
   );
 }
-
-// ── Client form component (keeps page server-renderable) ──────────────────────
-import LoginForm from "./LoginForm";
-
