@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";

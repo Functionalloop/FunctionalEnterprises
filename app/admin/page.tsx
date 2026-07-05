@@ -13,12 +13,27 @@ export default async function AdminPage() {
   }
 
   // Fetch data for the dashboard
-  const projects = await prisma.project.findMany({ orderBy: { order: "asc" } });
-  const blogs = await prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } });
+  const [projects, blogs, services, testimonials, stats, processSteps, submissions] = await Promise.all([
+    prisma.project.findMany({ orderBy: { order: "asc" } }),
+    prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+    prisma.service.findMany({ orderBy: { order: "asc" } }),
+    prisma.testimonial.findMany({ orderBy: { order: "asc" } }),
+    prisma.stat.findMany({ orderBy: { order: "asc" } }),
+    prisma.processStep.findMany({ orderBy: { order: "asc" } }),
+    prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" } }),
+  ]);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8">
-      <AdminDashboard projects={projects} blogs={blogs} />
+      <AdminDashboard
+        projects={projects}
+        blogs={blogs}
+        services={services}
+        testimonials={testimonials}
+        stats={stats}
+        processSteps={processSteps}
+        submissions={submissions}
+      />
     </div>
   );
 }

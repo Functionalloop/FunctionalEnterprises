@@ -65,3 +65,69 @@ export async function deleteBlogPost(id: string) {
   await requireAuth();
   await prisma.blogPost.delete({ where: { id } });
 }
+
+export async function saveService(data: { id?: string; title: string; description: string; icon: string; order: number }) {
+  await requireAuth();
+  if (data.id) {
+    await prisma.service.update({ where: { id: data.id }, data });
+  } else {
+    await prisma.service.create({ data });
+  }
+}
+
+export async function deleteService(id: string) {
+  await requireAuth();
+  await prisma.service.delete({ where: { id } });
+}
+
+export async function saveTestimonial(data: { id?: string; quote: string; author: string; role: string; company: string; projectSlug?: string | null; published: boolean; order: number }) {
+  await requireAuth();
+  if (data.id) {
+    await prisma.testimonial.update({ where: { id: data.id }, data });
+  } else {
+    await prisma.testimonial.create({ data });
+  }
+}
+
+export async function deleteTestimonial(id: string) {
+  await requireAuth();
+  await prisma.testimonial.delete({ where: { id } });
+}
+
+export async function saveStat(data: { id?: string; value: string; label: string; order: number }) {
+  await requireAuth();
+  if (data.id) {
+    await prisma.stat.update({ where: { id: data.id }, data });
+  } else {
+    await prisma.stat.create({ data });
+  }
+}
+
+export async function deleteStat(id: string) {
+  await requireAuth();
+  await prisma.stat.delete({ where: { id } });
+}
+
+export async function saveProcessStep(data: { id?: string; num: string; title: string; description: string; order: number }) {
+  await requireAuth();
+  if (data.id) {
+    await prisma.processStep.update({ where: { id: data.id }, data });
+  } else {
+    await prisma.processStep.create({ data });
+  }
+}
+
+export async function deleteProcessStep(id: string) {
+  await requireAuth();
+  await prisma.processStep.delete({ where: { id } });
+}
+
+export async function markSubmissionAsRead(id: string) {
+  await requireAuth();
+  await prisma.contactSubmission.update({ where: { id }, data: { read: true } });
+}
+
+export async function deleteSubmission(id: string) {
+  await requireAuth();
+  await prisma.contactSubmission.delete({ where: { id } });
+}
