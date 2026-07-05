@@ -1,3 +1,2 @@
-// Page-specific section components — Hero, ServiceGrid, CaseStudyCard, etc.
-// Components will be added in the next pass.
-export {};
+// Page-specific section components
+export { default as Pricing } from "./Pricing";

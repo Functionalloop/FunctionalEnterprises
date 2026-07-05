@@ -8,6 +8,7 @@ import { getProjects } from "@/lib/db/projects";
 import { getServices } from "@/lib/db/services";
 import { getTestimonials } from "@/lib/db/testimonials";
 import { getStats, getProcessSteps } from "@/lib/db/content";
+import Pricing from "@/components/sections/Pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,7 @@ export default async function HomePage() {
       <Services services={services} />
       <FeaturedWork projects={projects} />
       <SocialProof testimonials={testimonials} />
+      <Pricing />
       <Stats stats={stats} />
       <Process steps={processSteps} />
     </main>
