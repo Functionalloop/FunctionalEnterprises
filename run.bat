@@ -1,0 +1,3 @@
+@echo off
+echo Starting the agency project...
+npm run dev
