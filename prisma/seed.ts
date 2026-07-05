@@ -13,6 +13,39 @@ const stats = [
   { value: "6 Wks", label: "Average Launch Timeline" },
 ];
 
+const blogs = [
+  {
+    slug: "why-nextjs-for-agencies",
+    title: "Why Next.js is the Ultimate Framework for Modern Agencies",
+    excerpt: "Discover how Next.js empowers digital agencies to build lightning-fast, SEO-optimized web experiences.",
+    content: "Next.js has become the de-facto standard for React applications. Its hybrid static and server rendering capabilities combined with Edge computing means we can ship performant sites without sacrificing dynamic functionality. In this post, we explore the architectural advantages of adopting Next.js for agency projects.",
+    category: "Engineering",
+    readTime: 5,
+    published: true,
+    publishedAt: new Date("2026-06-10T10:00:00Z"),
+  },
+  {
+    slug: "design-systems-that-scale",
+    title: "Building Design Systems That Actually Scale",
+    excerpt: "A practical guide to creating component libraries and design tokens that bridge the gap between design and engineering.",
+    content: "A design system is more than a UI kit. It's a living ecosystem of guidelines, tokens, and components that evolve alongside your brand. By using tools like Tailwind CSS and Framer Motion, we create robust systems that allow for rapid iteration while maintaining strict visual consistency.",
+    category: "Design",
+    readTime: 8,
+    published: true,
+    publishedAt: new Date("2026-06-25T14:30:00Z"),
+  },
+  {
+    slug: "seo-in-2026",
+    title: "SEO in 2026: Beyond Core Web Vitals",
+    excerpt: "What matters for technical SEO in 2026? We break down the latest algorithm updates and performance metrics.",
+    content: "While Core Web Vitals remain crucial, semantic HTML and AI-driven intent matching are dominating the SEO landscape today. Search engines are getting better at understanding context and user experience, meaning that technically sound, accessible websites naturally rank higher.",
+    category: "Strategy",
+    readTime: 6,
+    published: true,
+    publishedAt: new Date("2026-07-01T09:15:00Z"),
+  }
+];
+
 const steps = [
   { num: "01", title: "Discover", description: "We learn your business, goals, and users." },
   { num: "02", title: "Design", description: "We map structure, flow, and visual direction." },
@@ -107,6 +140,17 @@ async function main() {
     }
   }
   console.log("Process Steps seeded.");
+
+  // Seed Blog Posts
+  for (let i = 0; i < blogs.length; i++) {
+    const b = blogs[i];
+    await prisma.blogPost.upsert({
+      where: { slug: b.slug },
+      update: {},
+      create: b,
+    });
+  }
+  console.log("Blog posts seeded.");
 
   console.log("Seeding complete!");
 }

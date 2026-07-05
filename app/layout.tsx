@@ -42,8 +42,26 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
-    locale: "en_GB",
+    locale: "en_IN",
     siteName: "Functional Enterprises",
+    title: "Functional Enterprises — Web Design & Development Agency",
+    description:
+      "A web design and development agency building high-performance digital products for ambitious brands. Strategy, design, and engineering — end to end.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Functional Enterprises — Web Design & Development",
+    description:
+      "We build digital products that perform — not just impress. Web design, brand identity & digital growth.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
   },
 };
 

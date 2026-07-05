@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: "About",    href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Work",     href: "/work" },
+  { label: "Pricing",  href: "/pricing" },
   { label: "Blog",     href: "/blog" },
   { label: "Contact",  href: "/contact" },
 ] as const;
@@ -96,7 +97,7 @@ export default function NavBar() {
 
   // Scroll listener — switches to solid-bg after 80px
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const onScroll = () => setScrolled(window.scrollY > 120);
     onScroll(); // run once on mount
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);

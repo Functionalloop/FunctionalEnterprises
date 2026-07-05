@@ -47,7 +47,12 @@ const tiers = [
     name: "Basic",
     price: "8,000",
     tag: "Starter",
-    features: ["A static page", "A single page website"],
+    features: [
+      "A static page",
+      "A single page website",
+      "Delivery in 1 week",
+      "1 revision round",
+    ],
     highlight: false,
     featured: false,
   },
@@ -55,7 +60,12 @@ const tiers = [
     name: "Essential",
     price: "20,000",
     tag: "Popular",
-    features: ["A dynamic website", "Multipages"],
+    features: [
+      "A dynamic website",
+      "Multipages",
+      "Delivery in 2-3 weeks",
+      "2 revision rounds",
+    ],
     highlight: false,
     featured: true,
   },
@@ -63,6 +73,7 @@ const tiers = [
     name: "Premium",
     price: "35,000",
     tag: "Advanced",
+    prefix: "Starting from",
     features: [
       "Dynamic, multipage, eCommerce-ready website",
       "Online Booking, reservations, orders",
@@ -94,26 +105,25 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "0px" }}
       className={cn(
-        "group relative flex flex-col",
-        "border-t-2 transition-colors duration-300",
-        tier.highlight
-          ? "bg-foreground-dark border-t-accent"
-          : tier.featured
-          ? "bg-surface-light border-t-accent"
-          : "bg-background border-t-border-light hover:border-t-accent"
+        "group relative flex flex-col transition-all duration-300",
+        tier.featured
+          ? "z-10 bg-background text-foreground-dark ring-2 ring-accent md:scale-[1.02] shadow-2xl"
+          : tier.highlight
+          ? "bg-foreground-dark text-white border-t-2 border-t-border-dark"
+          : "bg-background text-foreground-dark border-t-2 border-t-border-light hover:border-t-accent"
       )}
     >
       {/* Tag badge */}
       <div
         className={cn(
-          "absolute top-0 right-0 font-display text-[9px] tracking-[0.2em] uppercase px-3 py-1",
-          tier.highlight
+          "absolute top-0 right-0 font-display text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5",
+          tier.featured
             ? "bg-accent text-foreground-dark"
-            : tier.featured
-            ? "bg-foreground-dark text-accent"
-            : "bg-border-light text-muted-light"
+            : tier.highlight
+            ? "bg-white text-foreground-dark"
+            : "bg-foreground-dark text-white"
         )}
       >
         {tier.tag}
@@ -136,7 +146,7 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
             <p
               className={cn(
                 "font-body text-[10px] tracking-[0.2em] uppercase mb-2",
-                tier.highlight ? "text-muted-dark" : "text-muted-light"
+                tier.highlight ? "text-muted-dark" : "text-muted-darker"
               )}
             >
               {tier.prefix}
@@ -148,7 +158,7 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
               tier.highlight ? "text-white" : "text-foreground-dark"
             )}
           >
-            <span className="font-display text-xl font-medium leading-none mt-1">₹</span>
+            <span className="font-display text-2xl font-medium leading-none mt-1">₹</span>
             <span
               className="font-display font-extrabold leading-none"
               style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
@@ -161,14 +171,9 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
         {/* CTA */}
         <Button
           href="/contact"
-          variant={tier.highlight ? "primary" : "secondary"}
+          variant={tier.featured ? "primary" : "secondary"}
           size="default"
-          className={cn(
-            "w-full",
-            !tier.highlight &&
-              tier.featured &&
-              "bg-foreground-dark text-white border-foreground-dark hover:bg-transparent hover:text-foreground-dark"
-          )}
+          className="w-full"
           id={`pricing-cta-${tier.name.toLowerCase().replace(/\s+/g, "-")}`}
         >
           Get started →
@@ -188,8 +193,8 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
             <li key={idx} className="flex items-start gap-3">
               <span
                 className={cn(
-                  "mt-0.5 shrink-0",
-                  tier.highlight ? "text-accent" : "text-accent"
+                  "mt-1 shrink-0",
+                  tier.featured ? "text-accent" : tier.highlight ? "text-white" : "text-muted-darker"
                 )}
               >
                 <CheckIcon />
@@ -197,7 +202,7 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
               <span
                 className={cn(
                   "font-body text-sm leading-snug",
-                  tier.highlight ? "text-muted-dark" : "text-muted-light"
+                  tier.highlight ? "text-muted-dark" : "text-foreground-dark"
                 )}
               >
                 {feature}
@@ -237,7 +242,7 @@ export default function Pricing() {
       </motion.div>
 
       {/* ── Grid ────────────────────────────────────────────────────────── */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-border-dark border border-border-dark">
+      <div className="border border-border-dark divide-y divide-border-dark md:divide-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-border-dark">
         {tiers.map((tier, i) => (
           <PricingCard key={tier.name} tier={tier} index={i} />
         ))}

@@ -107,6 +107,10 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       className={cn(
         "group relative bg-background flex flex-col gap-8 p-8 lg:p-12",
         "border-t-2 border-t-transparent",
+        // Bottom accent sweep via pseudo-element — expands left to right on hover
+        "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0",
+        "after:bg-accent after:transition-[width] after:duration-500 after:ease-out",
+        "hover:after:w-full",
         "transition-colors duration-300",
         "hover:border-t-accent"
       )}
@@ -115,7 +119,12 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       {/* Number + icon row */}
       <div className="flex items-start justify-between">
         <span
-          className="font-display font-extrabold text-muted-lighter leading-none select-none"
+          className={cn(
+            "font-display font-extrabold leading-none select-none",
+            // Number transitions from muted to accent on hover
+            "text-muted-lighter group-hover:text-accent",
+            "transition-colors duration-400 ease-out"
+          )}
           style={{ fontSize: "clamp(3rem, 5vw, 5rem)" }}
           aria-hidden="true"
         >
@@ -125,7 +134,9 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           className={cn(
             "flex items-center justify-center w-11 h-11 mt-2",
             "text-muted-light group-hover:text-accent",
-            "transition-colors duration-300"
+            // Icon scales up with a slight rotation hint on hover
+            "transition-all duration-300",
+            "group-hover:scale-110"
           )}
         >
           {ICONS[service.icon] ?? null}
