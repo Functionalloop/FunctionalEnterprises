@@ -14,17 +14,30 @@
   --color-background:     #FAFAF8;
   --color-foreground-dark: #0A0A0A;
 
-  /* Accent — Lime */
-  --color-accent:         #C8FF00;
-  --color-accent-muted:   #C8FF0033;
+  /* Primary text on dark backgrounds */
+  --color-text-primary-dark: #FFFFFF;
+  /* Secondary text on dark backgrounds (lighter gray for better contrast) */
+  --color-text-secondary-dark: #E5E5E5;
+  /* Tertiary text on dark backgrounds (mid gray, min #B0B0B0+) */
+  --color-text-tertiary-dark: #B0B0B0;
 
-  /* Muted text — light context */
+  /* Primary text on light backgrounds */
+  --color-text-primary-light: #0A0A0A;
+  /* Secondary text on light backgrounds */
+  --color-text-secondary-light: #404040;
+  /* Tertiary text on light backgrounds */
+  --color-text-tertiary-light: #6B6B6B;
+
+  /* Accent — Lime (Brightened and desaturated slightly for dark mode contrast) */
+  --color-accent:         #D4FF33;
+  --color-accent-muted:   #D4FF3333;
+  --color-accent-chip:    #2A3300;
+
+  /* Muted text (Legacy) */
   --color-muted-light:    #6B6B6B;
   --color-muted-lighter:  #A0A0A0;
-
-  /* Muted text — dark context */
-  --color-muted-dark:     #A8A8A0;
-  --color-muted-darker:   #5C5C58;
+  --color-muted-dark:     #E5E5E5;
+  --color-muted-darker:   #B0B0B0;
 
   /* Surface tones */
   --color-surface-light:  #F0F0EC;
@@ -32,7 +45,7 @@
 
   /* Borders */
   --color-border-light:   #E4E4E0;
-  --color-border-dark:    #2A2A2A;
+  --color-border-dark:    #333333;
 
   /* ── Spacing extensions (agency-style section padding) ── */
   /* Tailwind v4 uses rem-based spacing natively; these extend the scale */
@@ -57,12 +70,53 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Body intentionally unstyled — set in next design pass */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary-light);
+  font-family: var(--font-body), monospace;
+  font-weight: 500; /* Bump body text to medium (500) for legibility on dark modes */
+}
+
+/* ─────────────────────────────────────────────
+   TEXT TIERS & CONTRAST UTILITIES
+   ───────────────────────────────────────────── */
+@layer utilities {
+  /* Dark Mode Tiers */
+  .text-tier-primary-dark {
+    color: var(--color-text-primary-dark);
+    font-weight: 700; /* Primary: bold */
+  }
+  .text-tier-secondary-dark {
+    color: var(--color-text-secondary-dark);
+    font-weight: 500; /* Secondary: medium */
+  }
+  .text-tier-tertiary-dark {
+    color: var(--color-text-tertiary-dark);
+    font-weight: 400; /* Tertiary: regular */
+  }
+  
+  /* Light Mode Tiers */
+  .text-tier-primary-light {
+    color: var(--color-text-primary-light);
+    font-weight: 700;
+  }
+  .text-tier-secondary-light {
+    color: var(--color-text-secondary-light);
+    font-weight: 500;
+  }
+  .text-tier-tertiary-light {
+    color: var(--color-text-tertiary-light);
+    font-weight: 400;
+  }
+
+  /* Scrim for gradient/overlay legibility */
+  .bg-scrim {
+    background: linear-gradient(to top, rgba(10, 10, 10, 0.8) 0%, rgba(10, 10, 10, 0) 100%);
+  }
+}
 
 /* ─────────────────────────────────────────────
    CUSTOM KEYFRAMES
-   Declared here (outside @theme) and referenced via
-   Tailwind v4 arbitrary animation classes or CSS directly.
    ───────────────────────────────────────────── */
 @keyframes marquee {
   from { transform: translateX(0); }

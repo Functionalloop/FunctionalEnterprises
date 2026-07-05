@@ -15,29 +15,37 @@ export const colors = {
 
   /** Deep black for dark sections, hero, footer */
   foregroundDark: "#0A0A0A",
+  /** Primary text on dark backgrounds */
+  textPrimaryDark: "#FFFFFF",
+  /** Secondary text on dark backgrounds (lighter gray for better contrast) */
+  textSecondaryDark: "#E5E5E5",
+  /** Tertiary text on dark backgrounds (mid gray, min #B0B0B0+) */
+  textTertiaryDark: "#B0B0B0",
+
+  /** Primary text on light backgrounds */
+  textPrimaryLight: "#0A0A0A",
+  /** Secondary text on light backgrounds */
+  textSecondaryLight: "#404040",
+  /** Tertiary text on light backgrounds */
+  textTertiaryLight: "#6B6B6B",
 
   /**
-   * ACCENT — Lime #C8FF00
-   * High-contrast, editorial, distinctly modern agency feel.
-   * Use sparingly: CTAs, highlighted text, interactive indicators.
+   * ACCENT — Lime #C8FF00 -> Adjusted for dark mode to not blend
+   * Brightened and desaturated slightly to #D4FF33 for better contrast
+   * Use exclusively for interactive/actionable elements.
    */
-  accent: "#C8FF00",
+  accent: "#D4FF33",
 
-  /** Accent at reduced opacity — hover states, background tints */
-  accentMuted: "#C8FF0033",
+  /** Accent at reduced opacity — hover states, background chips */
+  accentMuted: "#D4FF3333",
+  /** Background chip for accent elements to ensure contrast */
+  accentChip: "#2A3300",
 
-  // ── Muted text ───────────────────────────────
-  /** Body copy on light backgrounds */
+  // ── Muted text (Deprecated/Legacy mappings, keep for compatibility but redefine) ───────────────────────────────
   mutedLight: "#6B6B6B",
-
-  /** Captions / labels on light backgrounds */
   mutedLighter: "#A0A0A0",
-
-  /** Body copy on dark backgrounds */
-  mutedDark: "#A8A8A0",
-
-  /** Captions / labels on dark backgrounds */
-  mutedDarker: "#5C5C58",
+  mutedDark: "#E5E5E5",
+  mutedDarker: "#B0B0B0",
 
   // ── Surface tones ───────────────────────────
   /** Subtle card / section background on light */
@@ -49,8 +57,8 @@ export const colors = {
   /** Border on light sections */
   borderLight: "#E4E4E0",
 
-  /** Border on dark sections */
-  borderDark: "#2A2A2A",
+  /** Border on dark sections (increased contrast slightly from #2A2A2A) */
+  borderDark: "#333333",
 } as const;
 
 /**
