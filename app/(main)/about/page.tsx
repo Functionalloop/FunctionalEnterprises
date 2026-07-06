@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BookingCTAButton from "@/components/ui/BookingCTAButton";
+import { getStats } from "@/lib/db/content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -34,14 +35,9 @@ const values = [
   },
 ];
 
-const stats = [
-  { value: "2019", label: "Founded" },
-  { value: "42+", label: "Projects Delivered" },
-  { value: "₹4M+", label: "Revenue Driven" },
-  { value: "98%", label: "Client Retention" },
-];
+export default async function AboutPage() {
+  const stats = await getStats();
 
-export default function AboutPage() {
   return (
     <main className="bg-background min-h-screen">
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
@@ -79,7 +75,7 @@ export default function AboutPage() {
             </div>
             <div className="flex flex-col gap-5">
               <p className="font-body text-base text-muted-light leading-relaxed">
-                Functional Enterprises was founded in 2019 with a single belief: that great
+                Functional Enterprises was founded in 2025 with a single belief: that great
                 web design should be measurably good, not just visually impressive.
               </p>
               <p className="font-body text-base text-muted-light leading-relaxed">
@@ -145,21 +141,6 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
-      <section className="bg-foreground-dark border-t border-border-dark py-20 md:py-28">
-        <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20 flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
-          <h2
-            className="font-display font-extrabold text-white tracking-tight leading-[0.97]"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
-          >
-            Want to work together?
-          </h2>
-          <BookingCTAButton variant="primary" size="lg">
-            Start a project
-          </BookingCTAButton>
         </div>
       </section>
     </main>

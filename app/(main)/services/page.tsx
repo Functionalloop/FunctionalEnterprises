@@ -142,21 +142,6 @@ export default async function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
-      <section className="bg-foreground-dark border-t border-border-dark py-20 md:py-28">
-        <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20 text-center">
-          <h2
-            className="font-display font-extrabold text-white tracking-tight leading-[0.97] mb-8"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
-          >
-            Ready to get started?
-          </h2>
-          <BookingCTAButton variant="primary" size="lg">
-            Start a project
-          </BookingCTAButton>
-        </div>
-      </section>
     </main>
   );
 }
