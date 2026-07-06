@@ -87,6 +87,22 @@ export default function ContactForm() {
         </div>
       </div>
 
+      {/* Phone row */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="phone" className="font-body text-[10px] text-muted-darker tracking-[0.2em] uppercase">
+          Phone Number <span className="text-accent">*</span>
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          required
+          placeholder="+91 98765 43210"
+          className={fieldBase}
+          autoComplete="tel"
+        />
+      </div>
+
       {/* Project type + Budget row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="flex flex-col gap-2">
@@ -119,11 +135,11 @@ export default function ContactForm() {
             defaultValue=""
           >
             <option value="" disabled>Select a range…</option>
-            <option value="Under £5k">Under £5k</option>
-            <option value="£5k – £15k">£5k – £15k</option>
-            <option value="£15k – £30k">£15k – £30k</option>
-            <option value="£30k – £60k">£30k – £60k</option>
-            <option value="£60k+">£60k+</option>
+            <option value="Under ₹8k">Under ₹8k</option>
+            <option value="₹8k – ₹20k">₹8k – ₹20k</option>
+            <option value="₹20k – ₹35k">₹20k – ₹35k</option>
+            <option value="₹35k – ₹75k">₹35k – ₹75k</option>
+            <option value="₹75k+">₹75k+</option>
           </select>
         </div>
       </div>

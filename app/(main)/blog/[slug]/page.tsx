@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { getBlogPost, getBlogPosts } from "@/lib/db/blog";
-import Button from "@/components/ui/Button";
+import BookingCTAButton from "@/components/ui/BookingCTAButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -167,15 +167,12 @@ export default async function BlogPostPage({ params }: Props) {
       {/* ── CTA ────────────────────────────────────────────────────────────── */}
       <section className="bg-foreground-dark border-t border-border-dark py-20 md:py-24">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20 text-center">
-          <h2
-            className="font-display font-extrabold text-white tracking-tight leading-[0.97] mb-8"
-            style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
-          >
-            Ready to work together?
-          </h2>
-          <Button href="/contact" variant="primary" size="lg">
-            Start a project →
-          </Button>
+          <div className="mt-16 pt-16 border-t border-border-light text-center">
+            <h3 className="font-display font-bold text-2xl mb-6 text-white">Ready to elevate your digital presence?</h3>
+            <BookingCTAButton variant="primary" size="lg">
+              Start a project
+            </BookingCTAButton>
+          </div>
         </div>
       </section>
     </main>

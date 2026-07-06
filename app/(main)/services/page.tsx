@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getServices } from "@/lib/db/services";
-import Button from "@/components/ui/Button";
+import BookingCTAButton from "@/components/ui/BookingCTAButton";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -152,9 +152,9 @@ export default async function ServicesPage() {
           >
             Ready to get started?
           </h2>
-          <Button href="/contact" variant="primary" size="lg">
-            Start a project →
-          </Button>
+          <BookingCTAButton variant="primary" size="lg">
+            Start a project
+          </BookingCTAButton>
         </div>
       </section>
     </main>

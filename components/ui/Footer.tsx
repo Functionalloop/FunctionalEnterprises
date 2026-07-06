@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Button from "./Button";
+import BookingCTAButton from "./BookingCTAButton";
 import Container from "./Container";
 import { cn } from "@/lib/utils";
 
@@ -14,10 +15,11 @@ const NAV_LINKS = [
 ] as const;
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: "https://linkedin.com", external: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/functional-enterprises/", external: true },
   { label: "X / Twitter", href: "https://x.com", external: true },
-  { label: "Dribbble", href: "https://dribbble.com", external: true },
-  { label: "GitHub", href: "https://github.com", external: true },
+  { label: "Instagram", href: "https://instagram.com/function", external: true },
+  { label: "WhatsApp", href: "https://wa.me/919272472780", external: true },
+  { label: "GitHub", href: "https://github.com/Functionalloop", external: true },
 ] as const;
 
 // ── Inline divider ────────────────────────────────────────────────────────────
@@ -62,14 +64,13 @@ export default function Footer() {
 
             {/* CTA cluster */}
             <div className="flex flex-col sm:flex-row gap-4 md:flex-col xl:flex-row xl:items-center flex-shrink-0">
-              <Button
-                href="/contact"
+              <BookingCTAButton
                 variant="primary"
                 size="lg"
                 id="footer-cta-primary"
               >
                 Start a project
-              </Button>
+              </BookingCTAButton>
               <Button
                 href="/work"
                 variant="secondary"
@@ -203,7 +204,7 @@ export default function Footer() {
       <Container>
         <div className="py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <p className="font-body text-muted-darker text-xs tracking-wide">
-            © {year} Functional Enterprises Ltd. All rights reserved.
+            © {year} All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "./Button";
 import { cn } from "@/lib/utils";
+import { useBooking } from "@/lib/context/BookingContext";
 
 // ── Nav links ─────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
@@ -94,6 +95,7 @@ export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { openDrawer } = useBooking();
 
   // Scroll listener — switches to solid-bg after 80px
   useEffect(() => {
@@ -165,7 +167,7 @@ export default function NavBar() {
             {/* Right: CTA + hamburger */}
             <div className="flex items-center gap-4">
               <Button
-                href="/contact"
+                onClick={() => openDrawer()}
                 variant="primary"
                 size="default"
                 className={cn(
@@ -279,7 +281,10 @@ export default function NavBar() {
                 Ready to build?
               </p>
               <Button
-                href="/contact"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setTimeout(() => openDrawer(), 300);
+                }}
                 variant="primary"
                 size="lg"
                 className="w-full justify-center"

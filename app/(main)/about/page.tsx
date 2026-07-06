@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Button from "@/components/ui/Button";
+import BookingCTAButton from "@/components/ui/BookingCTAButton";
 
 export const metadata: Metadata = {
   title: "About",
@@ -37,7 +37,7 @@ const values = [
 const stats = [
   { value: "2019", label: "Founded" },
   { value: "42+", label: "Projects Delivered" },
-  { value: "£4M+", label: "Revenue Driven" },
+  { value: "₹4M+", label: "Revenue Driven" },
   { value: "98%", label: "Client Retention" },
 ];
 
@@ -157,9 +157,9 @@ export default function AboutPage() {
           >
             Want to work together?
           </h2>
-          <Button href="/contact" variant="primary" size="lg">
-            Start a project →
-          </Button>
+          <BookingCTAButton variant="primary" size="lg">
+            Start a project
+          </BookingCTAButton>
         </div>
       </section>
     </main>

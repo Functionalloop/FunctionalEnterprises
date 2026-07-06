@@ -16,6 +16,7 @@ export async function submitContactForm(
   // Extract form fields
   const name = ((formData.get("name") as string) ?? "").trim();
   const email = ((formData.get("email") as string) ?? "").trim();
+  const phone = ((formData.get("phone") as string) ?? "").trim();
   const projectType = ((formData.get("projectType") as string) ?? "").trim();
   const budget = ((formData.get("budget") as string) ?? "").trim();
   const message = ((formData.get("message") as string) ?? "").trim();
@@ -35,7 +36,7 @@ export async function submitContactForm(
   }
 
   // Basic presence validation
-  if (!name || !email || !message) {
+  if (!name || !email || !phone || !message) {
     return { status: "error", message: "Please fill in all required fields." };
   }
 
@@ -45,6 +46,9 @@ export async function submitContactForm(
   }
   if (email.length > 254) {
     return { status: "error", message: "Email address is too long." };
+  }
+  if (phone.length > 20) {
+    return { status: "error", message: "Phone number is too long." };
   }
   if (projectType.length > 100) {
     return { status: "error", message: "Project type is too long (max 100 characters)." };
@@ -65,11 +69,20 @@ export async function submitContactForm(
     return { status: "error", message: "Please enter a valid email address." };
   }
 
+  // Phone format validation (Indian standard, optional +91, 10 digits)
+  // E.g. 9876543210, 09876543210, +919876543210, +91-9876543210, 98765 43210
+  const phoneRegex = /^(\+91[\-\s]?)?[0]?[6-9]\d{9}$/;
+  const cleanPhone = phone.replace(/[\s-]/g, "");
+  if (!phoneRegex.test(cleanPhone)) {
+    return { status: "error", message: "Please enter a valid 10-digit Indian phone number." };
+  }
+
   // Save to database — always, regardless of email success — appears in admin inbox
   try {
     await saveSubmission({
       name,
       email,
+      phone,
       projectType: projectType || undefined,
       budget: budget || undefined,
       message,
@@ -99,6 +112,7 @@ export async function submitContactForm(
           text: `
 Name:         ${name}
 Email:        ${email}
+Phone:        ${phone}
 Project Type: ${projectType || "Not specified"}
 Budget:       ${budget || "Not specified"}
 
@@ -110,7 +124,41 @@ ${message}
 
       if (!res.ok) {
         const err = await res.text();
-        console.error("Resend error:", err);
+        console.error("Resend error (Admin email):", err);
+      }
+
+      // --- SEND AUTO-RESPONDER TO USER ---
+      const autoResponderRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "Functional Enterprises <onboarding@resend.dev>",
+          to: [email],
+          subject: `We've received your enquiry, ${name}!`,
+          text: `Hi ${name},
+
+Thank you for reaching out to Functional Enterprises! 
+
+We have received your message and our team will review it shortly. We typically respond within 1 business day.
+
+Here is a copy of what you submitted:
+- Project Type: ${projectType || "Not specified"}
+- Budget: ${budget || "Not specified"}
+
+Message:
+${message}
+
+Best regards,
+The Functional Enterprises Team`,
+        }),
+      });
+
+      if (!autoResponderRes.ok) {
+        const err = await autoResponderRes.text();
+        console.error("Resend error (Auto-responder):", err);
       }
     } catch (err) {
       console.error("Network error sending email:", err);

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Heading from "@/components/ui/Heading";
-import Button from "@/components/ui/Button";
+import BookingCTAButton from "@/components/ui/BookingCTAButton";
 import type { ProcessStep } from "@/lib/db/content";
 
 interface Props {
@@ -71,14 +71,7 @@ export default function Process({ steps }: Props) {
         transition={{ duration: 0.5, delay: 0.6, ease: "easeOut" }}
         className="mt-16 md:mt-20 flex justify-center"
       >
-        <Button
-          variant="secondary"
-          size="lg"
-          href="/contact"
-          className="text-foreground-dark border-foreground-dark hover:border-accent hover:text-accent"
-        >
-          Start your project →
-        </Button>
+        <BookingCTAButton />
       </motion.div>
     </SectionWrapper>
   );

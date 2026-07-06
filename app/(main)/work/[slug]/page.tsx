@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getProject, getProjects } from "@/lib/db/projects";
-import Button from "@/components/ui/Button";
+import BookingCTAButton from "@/components/ui/BookingCTAButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -150,9 +150,9 @@ export default async function CaseStudyPage({ params }: Props) {
                 </ul>
               </div>
 
-              <Button href="/contact" variant="primary" size="lg" className="w-full justify-center">
+              <BookingCTAButton variant="primary" size="lg" className="w-full justify-center">
                 Start a similar project →
-              </Button>
+              </BookingCTAButton>
             </aside>
           </div>
         </div>

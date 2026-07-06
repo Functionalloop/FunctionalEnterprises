@@ -6,6 +6,7 @@ export type { ContactSubmission };
 export async function saveSubmission(data: {
   name: string;
   email: string;
+  phone?: string;
   projectType?: string;
   budget?: string;
   message: string;

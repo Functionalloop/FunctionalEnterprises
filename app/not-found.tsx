@@ -50,13 +50,13 @@ export default function NotFound() {
             Back to Home
           </Button>
           <Button
-            href="/contact"
+            href="/pricing"
             variant="secondary"
             size="lg"
             className="text-white border-border-dark hover:border-accent hover:text-accent"
             id="not-found-contact"
           >
-            Start a project →
+            View pricing →
           </Button>
         </div>
       </div>

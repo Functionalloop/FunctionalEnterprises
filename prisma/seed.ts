@@ -8,7 +8,7 @@ import { testimonials } from "../lib/data/testimonials";
 
 const stats = [
   { value: "42+", label: "Projects Delivered" },
-  { value: "£4M+", label: "Revenue Driven for Clients" },
+  { value: "₹4M+", label: "Revenue Driven for Clients" },
   { value: "98%", label: "Client Retention Rate" },
   { value: "6 Wks", label: "Average Launch Timeline" },
 ];

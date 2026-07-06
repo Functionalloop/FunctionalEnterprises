@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import Heading from "@/components/ui/Heading";
-import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { useBooking } from "@/lib/context/BookingContext";
+import type { BookingPlan } from "@/lib/context/BookingContext";
 
 // ── Framer Motion variants ────────────────────────────────────────────────────
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -42,7 +43,11 @@ const CheckIcon = () => (
 );
 
 // ── Data ─────────────────────────────────────────────────────────────────────
-const tiers = [
+const tiers: (BookingPlan & {
+  features: string[];
+  highlight: boolean;
+  featured: boolean;
+})[] = [
   {
     name: "Basic",
     price: "8,000",
@@ -98,7 +103,15 @@ const tiers = [
 ];
 
 // ── Pricing Card ──────────────────────────────────────────────────────────────
-function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: number }) {
+function PricingCard({
+  tier,
+  index,
+  onBook,
+}: {
+  tier: (typeof tiers)[number];
+  index: number;
+  onBook: (plan: BookingPlan) => void;
+}) {
   return (
     <motion.div
       custom={index}
@@ -168,16 +181,33 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
           </div>
         </div>
 
-        {/* CTA */}
-        <Button
-          href="/contact"
-          variant={tier.featured ? "primary" : "secondary"}
-          size="default"
-          className="w-full"
+        {/* CTA — opens booking drawer */}
+        <button
+          onClick={() =>
+            onBook({
+              name: tier.name,
+              price: tier.price,
+              tag: tier.tag,
+              prefix: tier.prefix,
+            })
+          }
           id={`pricing-cta-${tier.name.toLowerCase().replace(/\s+/g, "-")}`}
+          className={cn(
+            "w-full inline-flex items-center justify-center gap-2",
+            "font-display font-semibold tracking-widest uppercase text-xs",
+            "px-6 py-3 rounded-none cursor-pointer select-none",
+            "transition-all duration-200 ease-out",
+            "hover:scale-[1.02] active:scale-[0.98]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+            tier.featured
+              ? "bg-accent text-foreground-dark border border-accent hover:bg-transparent hover:text-accent"
+              : tier.highlight
+              ? "bg-white text-foreground-dark border border-white hover:bg-transparent hover:text-white"
+              : "bg-transparent border border-current hover:border-accent hover:text-accent"
+          )}
         >
           Get started →
-        </Button>
+        </button>
 
         {/* Divider */}
         <div
@@ -217,6 +247,8 @@ function PricingCard({ tier, index }: { tier: (typeof tiers)[number]; index: num
 
 // ── Section ───────────────────────────────────────────────────────────────────
 export default function Pricing() {
+  const { openDrawer } = useBooking();
+
   return (
     <SectionWrapper theme="dark" id="pricing" aria-label="Pricing plans">
       {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -244,7 +276,7 @@ export default function Pricing() {
       {/* ── Grid ────────────────────────────────────────────────────────── */}
       <div className="border border-border-dark divide-y divide-border-dark md:divide-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-border-dark">
         {tiers.map((tier, i) => (
-          <PricingCard key={tier.name} tier={tier} index={i} />
+          <PricingCard key={tier.name} tier={tier} index={i} onBook={openDrawer} />
         ))}
       </div>
 
@@ -256,7 +288,7 @@ export default function Pricing() {
         transition={{ delay: 0.6, duration: 0.6 }}
         className="mt-8 text-center font-body text-xs text-muted-darker"
       >
-        All prices are in Indian Rupees (₹). Maintenance & hosting plans available separately.
+        All prices are in Indian Rupees (₹). Maintenance &amp; hosting plans available separately.
       </motion.p>
     </SectionWrapper>
   );

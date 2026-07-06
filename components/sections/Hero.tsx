@@ -40,6 +40,7 @@ import {
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import Heading from "@/components/ui/Heading";
+import { useBooking } from "@/lib/context/BookingContext";
 
 // ── motion()-wrapped design system components ─────────────────────────────────
 // motion() creates a version of the component that can receive MotionValues
@@ -62,6 +63,7 @@ const INDICATOR_TRANSITION = {
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const rm = useReducedMotion(); // true when user prefers reduced motion
+  const { openDrawer } = useBooking();
 
   // ── Scroll progress scoped to this section only ───────────────────────────
   const { scrollYProgress } = useScroll({
@@ -269,7 +271,7 @@ export default function Hero() {
             <Button
               variant="primary"
               size="lg"
-              href="/contact"
+              onClick={() => openDrawer()}
               id="hero-cta"
             >
               Start a project
