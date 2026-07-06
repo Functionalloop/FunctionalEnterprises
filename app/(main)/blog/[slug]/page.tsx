@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params }: Props) {
                     </div>
                   )}
                   <div className="p-6">
-                    <span className="font-body text-[9px] tracking-widest uppercase text-accent block mb-3">
+                    <span className="inline-block font-body text-[9px] tracking-widest uppercase text-accent bg-foreground-dark px-2 py-1 rounded-sm mb-3">
                       {p.category}
                     </span>
                     <h3 className="font-display font-bold text-base tracking-tight text-foreground-dark group-hover:text-accent transition-colors duration-200 leading-snug">

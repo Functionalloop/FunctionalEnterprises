@@ -68,7 +68,7 @@ export default async function BlogPage() {
                   <div className="p-6 md:p-8 flex flex-col flex-grow">
                     {/* Category + read time */}
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="font-body text-[9px] tracking-widest uppercase text-accent border border-accent/30 px-2 py-0.5">
+                      <span className="inline-block font-body text-[9px] tracking-widest uppercase text-accent bg-foreground-dark px-2 py-1 rounded-sm">
                         {post.category}
                       </span>
                       <span className="font-body text-[10px] text-muted-lighter">

@@ -118,7 +118,7 @@ export default async function ServicesPage() {
       {/* ── FAQ ───────────────────────────────────────────────────────────── */}
       <section className="bg-surface-light border-t border-border-light py-20 md:py-28">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
-          <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-6">
+          <p className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-6 bg-foreground-dark px-3 py-1.5 rounded-sm">
             FAQ
           </p>
           <h2

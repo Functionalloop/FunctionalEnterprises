@@ -187,7 +187,7 @@ export default function Services({ services }: Props) {
         className="mb-16 md:mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
       >
         <div>
-          <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-4">
+          <p className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-4 bg-foreground-dark px-3 py-1.5 rounded-sm">
             What we do
           </p>
           <Heading level="h2" size="h2" className="text-foreground-dark">

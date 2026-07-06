@@ -106,7 +106,7 @@ export default async function CaseStudyPage({ params }: Props) {
             <div className="flex flex-col gap-14">
               {/* Problem */}
               <div>
-                <p className="font-body text-accent text-[10px] tracking-[0.28em] uppercase mb-4">
+                <p className="inline-block font-body text-accent text-[10px] tracking-[0.28em] uppercase mb-4 bg-foreground-dark px-3 py-1.5 rounded-sm">
                   The Challenge
                 </p>
                 <p className="font-body text-muted-light text-base md:text-lg leading-relaxed">
@@ -116,7 +116,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
               {/* Solution */}
               <div>
-                <p className="font-body text-accent text-[10px] tracking-[0.28em] uppercase mb-4">
+                <p className="inline-block font-body text-accent text-[10px] tracking-[0.28em] uppercase mb-4 bg-foreground-dark px-3 py-1.5 rounded-sm">
                   Our Solution
                 </p>
                 <p className="font-body text-muted-light text-base md:text-lg leading-relaxed">

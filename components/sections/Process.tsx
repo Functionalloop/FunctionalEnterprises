@@ -17,7 +17,7 @@ export default function Process({ steps }: Props) {
     <SectionWrapper theme="light" id="process">
       {/* Header */}
       <div className="mb-16 md:mb-24">
-        <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-4">
+        <p className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-4 bg-foreground-dark px-3 py-1.5 rounded-sm">
           Our Approach
         </p>
         <Heading level="h2" size="h2" className="text-left">
@@ -43,7 +43,7 @@ export default function Process({ steps }: Props) {
             className="relative flex flex-col items-start"
           >
             {/* Large muted step number */}
-            <div className="font-display font-extrabold text-7xl md:text-8xl text-foreground-dark/[0.05] leading-none select-none mb-4 md:mb-6">
+            <div className="font-display font-extrabold text-7xl md:text-8xl text-foreground-dark/[0.18] leading-none select-none mb-4 md:mb-6 [-webkit-text-stroke:1px_rgba(10,10,10,0.15)]">
               {step.num}
             </div>
 

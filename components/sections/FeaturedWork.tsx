@@ -21,7 +21,7 @@ export default function FeaturedWork({ projects }: Props) {
     <SectionWrapper theme="light" id="work">
       {/* Header */}
       <div className="mb-12 md:mb-16 flex flex-col items-start gap-3">
-        <span className="font-body text-accent text-xs tracking-[0.28em] uppercase">
+        <span className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase bg-foreground-dark px-3 py-1.5 rounded-sm">
           Our Portfolio
         </span>
         <Heading level="h2" size="h2">

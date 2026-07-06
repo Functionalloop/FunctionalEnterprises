@@ -65,7 +65,7 @@ export default function AboutPage() {
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
             <div>
-              <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-6">
+              <p className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-6 bg-foreground-dark px-3 py-1.5 rounded-sm">
                 Our Story
               </p>
               <h2
@@ -121,7 +121,7 @@ export default function AboutPage() {
       {/* ── Values ────────────────────────────────────────────────────────── */}
       <section className="py-20 md:py-28">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
-          <p className="font-body text-accent text-xs tracking-[0.28em] uppercase mb-6">
+          <p className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-6 bg-foreground-dark px-3 py-1.5 rounded-sm">
             Our Values
           </p>
           <h2
