@@ -13,15 +13,22 @@ export default async function AdminPage() {
   }
 
   // Fetch data for the dashboard
-  const [projects, blogs, services, testimonials, stats, processSteps, submissions] = await Promise.all([
-    prisma.project.findMany({ orderBy: { order: "asc" } }),
-    prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.service.findMany({ orderBy: { order: "asc" } }),
-    prisma.testimonial.findMany({ orderBy: { order: "asc" } }),
-    prisma.stat.findMany({ orderBy: { order: "asc" } }),
-    prisma.processStep.findMany({ orderBy: { order: "asc" } }),
-    prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" } }),
-  ]);
+  const [projects, blogs, services, testimonials, stats, processSteps, submissions, hackathonProjects] =
+    await Promise.all([
+      prisma.project.findMany({ orderBy: { order: "asc" } }),
+      prisma.blogPost.findMany({ orderBy: { createdAt: "desc" } }),
+      prisma.service.findMany({ orderBy: { order: "asc" } }),
+      prisma.testimonial.findMany({ orderBy: { order: "asc" } }),
+      prisma.stat.findMany({ orderBy: { order: "asc" } }),
+      prisma.processStep.findMany({ orderBy: { order: "asc" } }),
+      prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" } }),
+      prisma.hackathonProject.findMany({
+        orderBy: [
+          { placement: { sort: "asc", nulls: "last" } },
+          { year: "desc" },
+        ],
+      }),
+    ]);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white p-8">
@@ -33,6 +40,7 @@ export default async function AdminPage() {
         stats={stats}
         processSteps={processSteps}
         submissions={submissions}
+        hackathonProjects={hackathonProjects}
       />
     </div>
   );

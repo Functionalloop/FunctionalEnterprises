@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { getProjects } from "@/lib/db/projects";
+import ProjectCard from "@/components/ui/ProjectCard";
 
 export const metadata: Metadata = {
   title: "Our Work",
@@ -40,44 +39,20 @@ export default async function WorkPage() {
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-              {projects.map((project) => (
-                <Link
+              {projects.map((project, index) => (
+                <ProjectCard
                   key={project.slug}
+                  variant="case-study"
+                  title={project.title}
+                  client={project.client}
+                  result={project.result}
+                  tags={project.tags}
+                  coverImage={project.coverImage}
+                  year={project.year}
                   href={`/work/${project.slug}`}
-                  className="group relative block flex flex-col bg-background border border-border-light shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg"
-                >
-                  <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-
-                  <div className="relative aspect-video w-full overflow-hidden bg-surface-light">
-                    <Image
-                      src={project.coverImage}
-                      alt={project.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                    <span className="absolute top-4 right-4 bg-foreground-dark/80 backdrop-blur-sm text-muted-dark font-body text-[10px] tracking-widest uppercase px-2.5 py-1">
-                      {project.year}
-                    </span>
-                  </div>
-
-                  <div className="p-6 md:p-8 flex flex-col flex-grow">
-                    <h2 className="font-display font-bold text-xl md:text-2xl tracking-tight text-foreground-dark mb-1 group-hover:text-accent transition-colors duration-200">
-                      {project.title}
-                    </h2>
-                    <p className="font-body text-sm text-muted-light mb-5">
-                      {project.client}
-                    </p>
-                    <p className="font-body text-sm text-muted-light leading-relaxed border-l-2 border-accent/40 pl-3 mb-5 group-hover:border-accent transition-colors duration-300">
-                      {project.result}
-                    </p>
-                    <div className="mt-auto">
-                      <p className="font-body text-[11px] text-muted-lighter uppercase tracking-widest">
-                        {project.tags.split(",").map(t => t.trim()).join(" · ")}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+                  index={index}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               ))}
             </div>
           )}

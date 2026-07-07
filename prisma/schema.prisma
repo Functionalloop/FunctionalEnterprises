@@ -108,3 +108,24 @@ model AuditLog {
   detail    String?  // optional human-readable summary (e.g. record title)
   createdAt DateTime @default(now())
 }
+
+// ── FunctionalX Hackathon Projects ──────────────────────────────────────────
+// Managed separately from agency projects. Sorted by placement ASC NULLS LAST,
+// then year DESC — no manual order field needed.
+model HackathonProject {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  tags        String            // comma-separated tech stack, e.g. "React, Python, Firebase"
+  award       String?           // human-readable label e.g. "1st Place", "Best UX", "Finalist"
+  placement   Int?              // numeric rank: 1=1st, 2=2nd, null=unranked — drives sort
+  event       String?           // hackathon name e.g. "Smart India Hackathon 2025"
+  year        Int
+  teamMembers String?           // comma-separated names e.g. "Taish, Alex, Priya"
+  githubUrl   String?
+  demoUrl     String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

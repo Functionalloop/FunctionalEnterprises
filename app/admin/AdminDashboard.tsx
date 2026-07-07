@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Project, BlogPost, Service, Testimonial, Stat, ProcessStep, ContactSubmission } from "@prisma/client";
+import type { Project, BlogPost, Service, Testimonial, Stat, ProcessStep, ContactSubmission, HackathonProject } from "@prisma/client";
 import {
   logout,
   saveProject,
@@ -18,6 +18,8 @@ import {
   deleteProcessStep,
   markSubmissionAsRead,
   deleteSubmission,
+  saveHackathonProject,
+  deleteHackathonProject,
 } from "./actions";
 
 interface AdminDashboardProps {
@@ -28,6 +30,7 @@ interface AdminDashboardProps {
   stats: Stat[];
   processSteps: ProcessStep[];
   submissions: ContactSubmission[];
+  hackathonProjects: HackathonProject[];
 }
 
 export default function AdminDashboard({
@@ -38,6 +41,7 @@ export default function AdminDashboard({
   stats: initialStats,
   processSteps: initialProcessSteps,
   submissions: initialSubmissions,
+  hackathonProjects: initialHackathonProjects,
 }: AdminDashboardProps) {
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogs);
@@ -46,6 +50,7 @@ export default function AdminDashboard({
   const [stats, setStats] = useState<Stat[]>(initialStats);
   const [processSteps, setProcessSteps] = useState<ProcessStep[]>(initialProcessSteps);
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(initialSubmissions);
+  const [hackathonProjects, setHackathonProjects] = useState<HackathonProject[]>(initialHackathonProjects);
   const [activeTab, setActiveTab] = useState("projects");
 
   // State for Modals
@@ -55,6 +60,7 @@ export default function AdminDashboard({
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | Partial<Testimonial> | null>(null);
   const [editingStat, setEditingStat] = useState<Stat | Partial<Stat> | null>(null);
   const [editingProcessStep, setEditingProcessStep] = useState<ProcessStep | Partial<ProcessStep> | null>(null);
+  const [editingHackathon, setEditingHackathon] = useState<HackathonProject | Partial<HackathonProject> | null>(null);
   
   const [isSaving, setIsSaving] = useState(false);
 
@@ -306,6 +312,48 @@ export default function AdminDashboard({
     }
   }
 
+  // ── FunctionalX Handlers ────────────────────────────────────────────────────
+  async function handleSaveHackathon(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const fd = new FormData(e.currentTarget);
+      const placementRaw = fd.get("placement") as string;
+      await saveHackathonProject({
+        id: (fd.get("id") as string) || undefined,
+        slug: fd.get("slug") as string,
+        name: fd.get("name") as string,
+        description: fd.get("description") as string,
+        tags: fd.get("tags") as string,
+        award: (fd.get("award") as string) || null,
+        placement: placementRaw ? parseInt(placementRaw) : null,
+        event: (fd.get("event") as string) || null,
+        year: parseInt(fd.get("year") as string) || new Date().getFullYear(),
+        teamMembers: (fd.get("teamMembers") as string) || null,
+        githubUrl: (fd.get("githubUrl") as string) || null,
+        demoUrl: (fd.get("demoUrl") as string) || null,
+        published: fd.get("published") === "true",
+      });
+      alert("Hackathon project saved! Reloading...");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save hackathon project");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleDeleteHackathon(id: string) {
+    if (!confirm("Delete this hackathon project?")) return;
+    try {
+      await deleteHackathonProject(id);
+      setHackathonProjects(hackathonProjects.filter((h) => h.id !== id));
+    } catch (err) {
+      alert("Failed to delete hackathon project");
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
@@ -321,15 +369,19 @@ export default function AdminDashboard({
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-4 md:gap-6 border-b border-gray-800 mb-8 overflow-x-auto pb-1">
-        {["projects", "blogs", "services", "testimonials", "stats", "process", "inquiries"].map((tab) => (
+        {["projects", "blogs", "services", "testimonials", "stats", "process", "inquiries", "functionalx"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`pb-3 font-display font-bold text-xs md:text-sm tracking-widest uppercase transition-all duration-200 ${
-              activeTab === tab ? "text-white border-b-2 border-white" : "text-gray-500 hover:text-gray-300"
+              activeTab === tab
+                ? tab === "functionalx"
+                  ? "text-[#D4FF33] border-b-2 border-[#D4FF33]"
+                  : "text-white border-b-2 border-white"
+                : "text-gray-500 hover:text-gray-300"
             }`}
           >
-            {tab === "process" ? "PROCESS STEPS" : tab}
+            {tab === "process" ? "PROCESS STEPS" : tab === "functionalx" ? "FunctionalX" : tab}
           </button>
         ))}
       </div>
@@ -943,6 +995,146 @@ export default function AdminDashboard({
                 <button type="button" onClick={() => setEditingProcessStep(null)} className="text-gray-500 hover:text-white px-4 text-sm font-semibold">Cancel</button>
                 <button type="submit" disabled={isSaving} className="bg-white text-black font-display font-bold px-6 py-2 hover:bg-gray-200 text-sm">
                   {isSaving ? "Saving..." : "Save Step"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── FUNCTIONALX TAB ───────────────────────────────────────────────────── */}
+      {activeTab === "functionalx" && (
+        <div>
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={() => setEditingHackathon({})}
+              className="bg-[#D4FF33] text-black font-display font-bold text-sm px-4 py-2 hover:bg-[#c8f02a] transition-colors"
+            >
+              + New Project
+            </button>
+          </div>
+
+          <div className="bg-[#0e0e0e] border border-gray-800 rounded">
+            <table className="w-full text-left border-collapse">
+              <thead className="border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500 bg-black/45">
+                <tr>
+                  <th className="p-4 font-normal">Name</th>
+                  <th className="p-4 font-normal hidden md:table-cell">Event</th>
+                  <th className="p-4 font-normal hidden lg:table-cell">Award</th>
+                  <th className="p-4 font-normal">Status</th>
+                  <th className="p-4 font-normal text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm divide-y divide-gray-900">
+                {hackathonProjects.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-gray-600 text-sm">
+                      No hackathon projects yet. Add your first one!
+                    </td>
+                  </tr>
+                )}
+                {hackathonProjects.map((h) => (
+                  <tr key={h.id} className="hover:bg-white/[0.02]">
+                    <td className="p-4 font-semibold">{h.name}</td>
+                    <td className="p-4 text-gray-400 hidden md:table-cell">
+                      {h.event ? `${h.event} · ${h.year}` : h.year}
+                    </td>
+                    <td className="p-4 hidden lg:table-cell">
+                      {h.award ? (
+                        <span className="text-[#D4FF33] text-xs font-semibold">★ {h.award}</span>
+                      ) : (
+                        <span className="text-gray-600 text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-0.5 text-xs font-semibold rounded ${
+                        h.published ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"
+                      }`}>
+                        {h.published ? "Published" : "Draft"}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right flex justify-end gap-3">
+                      <button onClick={() => setEditingHackathon(h)} className="text-blue-400 hover:text-blue-300 text-xs">Edit</button>
+                      <button onClick={() => handleDeleteHackathon(h.id)} className="text-red-500 hover:text-red-400 text-xs">Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ── FUNCTIONALX EDIT MODAL ────────────────────────────────────────────── */}
+      {editingHackathon && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-start justify-center pt-10 px-4 overflow-y-auto">
+          <div className="bg-[#0e0e0e] border border-gray-800 w-full max-w-2xl p-8 mb-10 rounded">
+            <h2 className="font-display font-bold text-xl mb-2">
+              {editingHackathon.id ? "Edit Hackathon Project" : "New Hackathon Project"}
+            </h2>
+            <p className="text-gray-500 text-xs mb-6">FunctionalX · Hackathon Division</p>
+
+            <form onSubmit={handleSaveHackathon} className="flex flex-col gap-4">
+              {editingHackathon.id && <input type="hidden" name="id" value={editingHackathon.id} />}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Project Name *</label>
+                  <input name="name" defaultValue={editingHackathon.name} required className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Slug (URL key) *</label>
+                  <input name="slug" defaultValue={editingHackathon.slug} required placeholder="my-project" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Year *</label>
+                  <input name="year" type="number" defaultValue={editingHackathon.year || new Date().getFullYear()} required className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Description *</label>
+                  <textarea name="description" defaultValue={editingHackathon.description} required rows={3} className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Tech Stack Tags * (comma-separated)</label>
+                  <input name="tags" defaultValue={editingHackathon.tags} required placeholder="React, Python, Firebase" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Hackathon / Event Name</label>
+                  <input name="event" defaultValue={editingHackathon.event ?? ""} placeholder="Smart India Hackathon 2025" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Award Label</label>
+                  <input name="award" defaultValue={editingHackathon.award ?? ""} placeholder="1st Place, Best UX, Finalist" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Placement Rank (1=1st, blank=unranked)</label>
+                  <input name="placement" type="number" defaultValue={editingHackathon.placement ?? ""} placeholder="1" min="1" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Team Members (comma-separated)</label>
+                  <input name="teamMembers" defaultValue={editingHackathon.teamMembers ?? ""} placeholder="Taish, Alex, Priya" className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">GitHub URL</label>
+                  <input name="githubUrl" type="url" defaultValue={editingHackathon.githubUrl ?? ""} placeholder="https://github.com/..." className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Demo / Live URL</label>
+                  <input name="demoUrl" type="url" defaultValue={editingHackathon.demoUrl ?? ""} placeholder="https://..." className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] uppercase tracking-widest text-gray-500 mb-1">Published</label>
+                  <select name="published" defaultValue={String(editingHackathon.published ?? true)} className="w-full bg-[#050505] border border-gray-800 p-3 text-white focus:outline-none focus:border-[#D4FF33] text-sm">
+                    <option value="true">Published</option>
+                    <option value="false">Draft (hidden)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-4 mt-6 pt-6 border-t border-gray-800">
+                <button type="button" onClick={() => setEditingHackathon(null)} className="text-gray-500 hover:text-white px-4 text-sm font-semibold">Cancel</button>
+                <button type="submit" disabled={isSaving} className="bg-[#D4FF33] text-black font-display font-bold px-6 py-2 hover:bg-[#c8f02a] text-sm">
+                  {isSaving ? "Saving..." : "Save Project"}
                 </button>
               </div>
             </form>

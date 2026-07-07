@@ -10,14 +10,16 @@ import { useBooking } from "@/lib/context/BookingContext";
 
 // ── Nav links ─────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { label: "Home",     href: "/" },
-  { label: "About",    href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Work",     href: "/work" },
-  { label: "Pricing",  href: "/pricing" },
-  { label: "Blog",     href: "/blog" },
-  { label: "Contact",  href: "/contact" },
+  { label: "Home",        href: "/",            fx: false },
+  { label: "About",       href: "/about",        fx: false },
+  { label: "Services",    href: "/services",     fx: false },
+  { label: "Work",        href: "/work",         fx: false },
+  { label: "Pricing",     href: "/pricing",      fx: false },
+  { label: "Blog",        href: "/blog",         fx: false },
+  { label: "Contact",     href: "/contact",      fx: false },
+  { label: "FunctionalX", href: "/functionalx",  fx: true  },
 ] as const;
+
 
 // ── Animation variants ────────────────────────────────────────────────────────
 // Easing tuple typed explicitly so Framer Motion's Easing type is satisfied
@@ -139,7 +141,7 @@ export default function NavBar() {
               aria-label="Primary navigation"
               className="hidden md:flex items-center gap-8"
             >
-              {NAV_LINKS.map(({ label, href }) => {
+              {NAV_LINKS.map(({ label, href, fx }) => {
                 const active = pathname === href;
                 return (
                   <Link
@@ -150,12 +152,13 @@ export default function NavBar() {
                       "font-body text-xs tracking-[0.18em] uppercase transition-colors duration-200",
                       "relative after:absolute after:bottom-[-2px] after:left-0",
                       "after:h-px after:bg-accent after:transition-[width] after:duration-300",
-                      active
-                        ? "after:w-full"
-                        : "after:w-0 hover:after:w-full",
-                      isLight
-                        ? active ? "text-foreground-dark" : "text-muted-light hover:text-foreground-dark"
-                        : active ? "text-white" : "text-muted-dark hover:text-white"
+                      active ? "after:w-full" : "after:w-0 hover:after:w-full",
+                      // FunctionalX link always reads lime — its own brand colour
+                      fx
+                        ? "text-accent hover:text-accent/80"
+                        : isLight
+                          ? active ? "text-foreground-dark" : "text-muted-light hover:text-foreground-dark"
+                          : active ? "text-white" : "text-muted-dark hover:text-white"
                     )}
                   >
                     {label}
@@ -228,7 +231,7 @@ export default function NavBar() {
               className="flex-1 flex flex-col justify-center px-8 gap-2"
               aria-label="Mobile navigation"
             >
-              {NAV_LINKS.map(({ label, href }, i) => {
+              {NAV_LINKS.map(({ label, href, fx }, i) => {
                 const active = pathname === href;
                 return (
                   <motion.div
@@ -247,7 +250,8 @@ export default function NavBar() {
                         "text-[clamp(2.5rem,10vw,4.5rem)] leading-[1.1] tracking-[-0.03em]",
                         "border-b border-border-dark py-4",
                         "transition-colors duration-200 group",
-                        active ? "text-accent" : "text-white hover:text-accent"
+                        // FunctionalX always lime in mobile overlay too
+                        fx || active ? "text-accent" : "text-white hover:text-accent"
                       )}
                     >
                       <span className="flex items-center justify-between">
@@ -257,7 +261,7 @@ export default function NavBar() {
                           className={cn(
                             "text-accent text-2xl transition-transform duration-300",
                             "opacity-0 group-hover:opacity-100 group-hover:translate-x-1",
-                            active && "opacity-100"
+                            (active || fx) && "opacity-100"
                           )}
                           aria-hidden="true"
                         >

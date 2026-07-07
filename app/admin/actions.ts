@@ -131,3 +131,33 @@ export async function deleteSubmission(id: string) {
   await requireAuth();
   await prisma.contactSubmission.delete({ where: { id } });
 }
+
+export async function saveHackathonProject(data: {
+  id?: string;
+  slug: string;
+  name: string;
+  description: string;
+  tags: string;
+  award?: string | null;
+  placement?: number | null;
+  event?: string | null;
+  year: number;
+  teamMembers?: string | null;
+  githubUrl?: string | null;
+  demoUrl?: string | null;
+  published: boolean;
+}) {
+  await requireAuth();
+  const { id, ...rest } = data;
+  if (id) {
+    await prisma.hackathonProject.update({ where: { id }, data: rest });
+  } else {
+    await prisma.hackathonProject.create({ data: rest });
+  }
+}
+
+export async function deleteHackathonProject(id: string) {
+  await requireAuth();
+  await prisma.hackathonProject.delete({ where: { id } });
+}
+
