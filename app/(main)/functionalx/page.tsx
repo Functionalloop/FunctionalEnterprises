@@ -141,7 +141,46 @@ export default async function FunctionalXPage() {
         </div>
       </section>
 
+      {/* ── What is a Hackathon? ──────────────────────────────────────────── */}
+      <section className="border-t border-border-dark">
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20 py-14 md:py-16">
+          <div className="grid md:grid-cols-[1fr_2fr] gap-8 md:gap-16 items-start">
+
+            {/* Left label */}
+            <div>
+              <span className="inline-block font-body text-accent text-xs tracking-[0.28em] uppercase mb-3">
+                For context
+              </span>
+              <h2 className="font-display font-bold text-white text-xl md:text-2xl tracking-tight leading-snug">
+                What is a<br />Hackathon?
+              </h2>
+            </div>
+
+            {/* Right explanation */}
+            <div className="flex flex-col gap-5">
+              <p className="font-body text-muted-dark text-sm md:text-base leading-relaxed">
+                A <span className="text-white font-semibold">hackathon</span> is an intensive, time-boxed
+                competition — typically 24 to 48 hours — where teams of developers, designers, and
+                problem-solvers build a working product from scratch and pitch it to a panel of judges.
+              </p>
+              <p className="font-body text-muted-darker text-sm leading-relaxed">
+                The format rewards speed, creativity, and execution under pressure. Teams scope an idea,
+                prototype it, and present a live demo — all within the sprint window. The best submissions
+                solve a real problem in a way that&#39;s both technically sound and clearly explained.
+              </p>
+              <p className="font-body text-muted-darker text-sm leading-relaxed">
+                For us, hackathons are a proving ground — a place where we sharpen our instincts for
+                building fast, deciding quickly, and shipping something that actually works. The projects
+                below are the results of those sprints.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ── Projects grid ────────────────────────────────────────────────── */}
+
       <section className="py-20 md:py-28">
         <div className="max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-20">
 

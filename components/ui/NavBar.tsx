@@ -149,13 +149,16 @@ export default function NavBar() {
                     href={href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "font-body text-xs tracking-[0.18em] uppercase transition-colors duration-200",
+                      "font-body text-xs tracking-[0.18em] uppercase transition-all duration-200",
                       "relative after:absolute after:bottom-[-2px] after:left-0",
                       "after:h-px after:bg-accent after:transition-[width] after:duration-300",
                       active ? "after:w-full" : "after:w-0 hover:after:w-full",
-                      // FunctionalX link always reads lime — its own brand colour
                       fx
-                        ? "text-accent hover:text-accent/80"
+                        ? isLight
+                          // White nav: dark pill so lime is visible against white
+                          ? "text-accent bg-foreground-dark px-2.5 py-1 hover:bg-foreground-dark/80 after:hidden"
+                          // Transparent dark nav: plain lime text
+                          : "text-accent hover:text-accent/80"
                         : isLight
                           ? active ? "text-foreground-dark" : "text-muted-light hover:text-foreground-dark"
                           : active ? "text-white" : "text-muted-dark hover:text-white"
