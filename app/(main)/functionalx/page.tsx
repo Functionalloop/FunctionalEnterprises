@@ -218,6 +218,7 @@ export default async function FunctionalXPage() {
                   teamMembers={project.teamMembers}
                   githubUrl={project.githubUrl}
                   demoUrl={project.demoUrl}
+                  slug={project.slug}
                   index={index}
                 />
               ))}

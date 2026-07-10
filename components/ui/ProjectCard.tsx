@@ -196,6 +196,7 @@ export interface HackathonCardProps {
   teamMembers?: string | null;
   githubUrl?: string | null;
   demoUrl?: string | null;
+  slug: string;
   index?: number;
 }
 
@@ -209,6 +210,7 @@ function HackathonCard({
   teamMembers,
   githubUrl,
   demoUrl,
+  slug,
   index = 0,
 }: Omit<HackathonCardProps, "variant">) {
   const tagList = tags.split(",").map((t) => t.trim());
@@ -222,7 +224,7 @@ function HackathonCard({
       transition={{ duration: 0.55, delay: index * 0.08, ease: "easeOut" }}
       className="h-full"
     >
-      <CardShell darkMode>
+      <CardShell href={`/functionalx/${slug}`} darkMode>
         <div className="p-6 flex flex-col flex-grow gap-4">
           {/* Top row — award pill + event/year badge */}
           <div className="flex items-start justify-between gap-2 flex-wrap">
@@ -247,7 +249,7 @@ function HackathonCard({
           </h3>
 
           {/* Description */}
-          <p className="font-body text-sm text-muted-darker leading-relaxed border-l-2 border-accent/30 pl-3 group-hover:border-accent transition-colors duration-300">
+          <p className="font-body text-sm text-muted-darker leading-relaxed border-l-2 border-accent/30 pl-3 group-hover:border-accent transition-colors duration-300 line-clamp-3">
             {description}
           </p>
 

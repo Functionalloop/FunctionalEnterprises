@@ -1,35 +1,37 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { prisma } from "@/lib/db/prisma";
-
-const SECRET = process.env.ADMIN_SESSION_SECRET;
+import { requireAdmin } from "@/lib/auth/requireAdmin";
+import { setSession, clearSession } from "@/lib/auth/session";
+import { checkRateLimit } from "@/lib/auth/rateLimit";
+import { headers } from "next/headers";
 
 export async function requireAuth() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session")?.value;
-  if (session !== SECRET) {
-    throw new Error("Unauthorized");
-  }
+  await requireAdmin();
 }
 
 export async function login(password: string) {
+  // IP-based rate limiting (max 5 attempts per 15 minutes)
+  const h = await headers();
+  const ip =
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    h.get("x-real-ip") ??
+    "unknown";
+  const { allowed, retryAfterMs } = checkRateLimit(`login:${ip}`, 5, 15 * 60 * 1000);
+  if (!allowed) {
+    const minutes = Math.ceil(retryAfterMs / 1000 / 60);
+    return { success: false, error: `Too many attempts. Try again in ${minutes} minutes.` };
+  }
+
   if (password === process.env.ADMIN_PASSWORD) {
-    const cookieStore = await cookies();
-    cookieStore.set("admin_session", SECRET!, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 24, // 24 hours
-    });
+    await setSession();
     return { success: true };
   }
   return { success: false, error: "Invalid password" };
 }
 
 export async function logout() {
-  const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
+  await clearSession();
 }
 
 export async function saveProject(data: { id?: string; title: string; slug: string; client: string; problem: string; solution: string; result: string; tags: string; coverImage: string; year: number; order: number; published: boolean }) {

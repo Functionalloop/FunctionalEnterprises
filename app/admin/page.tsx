@@ -2,11 +2,12 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/db/prisma";
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
+import { verifyToken } from "@/lib/auth/session";
 
 export default async function AdminPage() {
   const cookieStore = await cookies();
   const session = cookieStore.get("admin_session")?.value;
-  const isAuthenticated = session === process.env.ADMIN_SESSION_SECRET;
+  const isAuthenticated = await verifyToken(session || "");
 
   if (!isAuthenticated) {
     return <AdminLogin />;
