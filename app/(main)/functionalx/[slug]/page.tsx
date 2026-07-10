@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getHackathonProject, getHackathonProjects } from "@/lib/db/hackathon-projects";
 
 interface Props {
@@ -134,6 +135,19 @@ export default async function HackathonProjectPage({ params }: Props) {
             </div>
           )}
         </div>
+
+        {project.coverImage && (
+          <div className="relative aspect-video md:aspect-[21/9] w-full overflow-hidden mt-16 max-w-[1360px] mx-auto px-5 sm:px-6 md:px-10 border-t border-border-dark">
+            <Image
+              src={project.coverImage}
+              alt={project.name}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        )}
       </section>
 
       <section className="py-16 md:py-20">

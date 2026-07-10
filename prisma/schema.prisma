@@ -125,6 +125,7 @@ model HackathonProject {
   teamMembers String?           // comma-separated names e.g. "Taish, Alex, Priya"
   githubUrl   String?
   demoUrl     String?
+  coverImage  String?           // Optional cover image for the project detailed page
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
